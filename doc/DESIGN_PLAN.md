@@ -62,7 +62,6 @@ This program is intended to be a platform for computer simulations of different 
 
 
 
-Jamie
 ![Game Design Drawing 1](doc/Screen Shot 2018-01-29 at 10.33.00 PM.png "Game Design 1")
 ## User Interface
 As drawn below, the top of the screen will be the simulation, and the bottom of the screen will be the user interface. A user can choose a type of simulation, scroll through the probability and the grid size. We will have three different simulations - fire simulation, biological simulation, and segregation simulation. Scroll bar for probability will be between 0 and 1. The grid size can vary from 10x10 to 50x50. Another scroll bar will be for the user to delay the time between each step. There are also buttons that starts, resets, stops, steps through, and loads a new configuration file.   
@@ -86,28 +85,28 @@ __Use Cases__
 * Since we have included an extra layer of Empty cells around the edge of the grid, we do not have to differentiate edge cells from middle cells. The evolve() methods will account for cases where some neighbors are Empty cells, i.e. not count Empty cells in Game Of Life simulation.
 
 
-Ryan
-Move to the next generation: update all cells in a simulation from their current state to their next state and display the result graphically
-Loop through every 2D cell and either turn the block on visually (if it’s next state is live) or turn the block off (if it’s next stated is dead). This means for each cell a graphic node (e.g. rectangle/square) at the cell’s x,y coordinate needs to be either black filled (for live) for white filled (for dead).  
 
-Set a simulation parameter: set the value of a parameter, probCatch, for a simulation, Fire, based on the value given in an XML fire
-To deal with parameter changes during the simulation, for instance when a GUI bar is moved.  First, the simulation calls the stop() method, instantiated for the specific simulation type.  Then the simulation parameters are modified, and start() is called again.
+* Move to the next generation: update all cells in a simulation from their current state to their next state and display the result graphically
+    * Loop through every 2D cell and either turn the block on visually (if it’s next state is live) or turn the block off (if it’s next stated is dead). This means for each cell a graphic node (e.g. rectangle/square) at the cell’s x,y coordinate needs to be either black filled (for live) for white filled (for dead).  
 
-Switch simulations: use the GUI to change the current simulation from Game of Life to Water
-This is basically a restart of the simulator.  Load the parameters for the specific simulation.  Initialize your cell grid.  And call the Simulation.evolve().
+* Set a simulation parameter: set the value of a parameter, probCatch, for a simulation, Fire, based on the value given in an XML fire
+    * To deal with parameter changes during the simulation, for instance when a GUI bar is moved.  First, the simulation calls the stop() method, instantiated for the specific simulation type.  Then the simulation parameters are modified, and start() is called again.
+
+* Switch simulations: use the GUI to change the current simulation from Game of Life to Water
+    * This is basically a restart of the simulator.  Load the parameters for the specific simulation.  Initialize your cell grid.  And call the Simulation.evolve().
 
    
 
-Design Considerations 
+## Design Considerations 
 This section describes any issues which need to be addressed or resolved before attempting to devise a complete design solution. It should include any design decisions that the group discussed at length (include pros and cons from all sides of the discussion) as well as any assumptions or dependencies regarding the program that impact the overall design. This section should go into as much detail as necessary to cover all your team wants to say.
-A design trade-off was made between a few methods (e.g. init() and evolve()) versus more, smaller methods.  We chose just the two large methods init/evolve since it makes the flow of the main program simpler to understand/implement. 
-When loading XML files that describe a simulation, the design can either re-read the file every time the simulation changes, or the data can be read only once and saved.  Re-reading is inefficient to execute, but easier to code (just call the reader method each time).  Rereading is slower, but doesn’t require a mechanism for storing all the parameters associated with the simulation.  For this design we choose the inefficient but easy to implement and more flexible re-read mechanism.
-The main loop really does two things: calculate the new cell values and render the new picture.  This can be designed/implemented as either one function or two.  For instance we chose just one function (evolve()), that both calculates the new cell values and renders the new picture.  We could have two functions evolve/render separately.  For simplicity of understanding the main code flow this is just one function (evolve).
-Which parameters can be changed mid-simulation and what is there effect requires some decisions.  Some parameters can be changed without restarting starting the simulation (like probability).  Some parameters required basically a restart -- grid size and simulation type both require a restart of the simulation state.
-When defining the XML input file, how is the starting state specified?  You can specify each blocks value (on or off), just specify the on blocks, just specify the off blocks, or only allow random on/off.  Our plan is to have an XML variable that specifiies whether the user is going ro provide On list, off list, start random.  E.g. if on list, the xml provides the x,y coordinates for every cell that is on.  If off list, then provide cells that are off.  If random is selected, then the on/off setting is random for all cells.
+* A design trade-off was made between a few methods (e.g. init() and evolve()) versus more, smaller methods.  We chose just the two large methods init/evolve since it makes the flow of the main program simpler to understand/implement. 
+* When loading XML files that describe a simulation, the design can either re-read the file every time the simulation changes, or the data can be read only once and saved.  Re-reading is inefficient to execute, but easier to code (just call the reader method each time).  Rereading is slower, but doesn’t require a mechanism for storing all the parameters associated with the simulation.  For this design we choose the inefficient but easy to implement and more flexible re-read mechanism.
+* The main loop really does two things: calculate the new cell values and render the new picture.  This can be designed/implemented as either one function or two.  For instance we chose just one function (evolve()), that both calculates the new cell values and renders the new picture.  We could have two functions evolve/render separately.  For simplicity of understanding the main code flow this is just one function (evolve).
+* Which parameters can be changed mid-simulation and what is there effect requires some decisions.  Some parameters can be changed without restarting starting the simulation (like probability).  Some parameters required basically a restart -- grid size and simulation type both require a restart of the simulation state.
+* When defining the XML input file, how is the starting state specified?  You can specify each blocks value (on or off), just specify the on blocks, just specify the off blocks, or only allow random on/off.  Our plan is to have an XML variable that specifiies whether the user is going ro provide On list, off list, start random.  E.g. if on list, the xml provides the x,y coordinates for every cell that is on.  If off list, then provide cells that are off.  If random is selected, then the on/off setting is random for all cells.
 
-Team Responsibilities
+## Team Responsibilities
 This section describes the program components each team member plans to take primary and secondary responsibility for and a high-level plan of how the team will complete the program.
-Jamie Kim - Grid class and one other simulation.
-Siyuan Chen - UI and Fire
-Ryan Suggs - Reader class and Game of Life simulation.
+* Jamie Kim - Grid class and one other simulation.
+* Siyuan Chen - UI and Fire
+* Ryan Suggs - Reader class and Game of Life simulation.
