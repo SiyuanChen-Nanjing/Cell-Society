@@ -1,4 +1,3 @@
-
 Design Plan for Cell Society
 =================
 
@@ -64,6 +63,7 @@ This program is intended to be a platform for computer simulations of different 
 
 
 Jamie
+[doc/Screen Shot 2018-01-29 at 10.33.00 PM.png]
 ## User Interface
 As drawn below, the top of the screen will be the simulation, and the bottom of the screen will be the user interface. A user can choose a type of simulation, scroll through the probability and the grid size. We will have three different simulations - fire simulation, biological simulation, and segregation simulation. Scroll bar for probability will be between 0 and 1. The grid size can vary from 10x10 to 50x50. Another scroll bar will be for the user to delay the time between each step. There are also buttons that starts, resets, stops, steps through, and loads a new configuration file.   
 As user steps through each frame, the number of rounds, right beneath the simulation, will be updated. Lastly, a user can load a new configuration file, which stops the current simulation and starts the new one. Since we have designed our user interface in a such a way that a user is not reporting inputs to the system, there will not be miscellaneous erroneous situations. 
