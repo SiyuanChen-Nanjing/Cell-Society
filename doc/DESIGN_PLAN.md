@@ -62,12 +62,12 @@ This program is intended to be a platform for computer simulations of different 
 
 
 
-![Game Design Drawing 1](doc/Screen Shot 2018-01-29 at 10.33.00 PM.png "Game Design 1")
+![Game Design Drawing 1](doc/Overview.png "Game Design Overview")
 ## User Interface
 As drawn below, the top of the screen will be the simulation, and the bottom of the screen will be the user interface. A user can choose a type of simulation, scroll through the probability and the grid size. We will have three different simulations - fire simulation, biological simulation, and segregation simulation. Scroll bar for probability will be between 0 and 1. The grid size can vary from 10x10 to 50x50. Another scroll bar will be for the user to delay the time between each step. There are also buttons that starts, resets, stops, steps through, and loads a new configuration file.   
 As user steps through each frame, the number of rounds, right beneath the simulation, will be updated. Lastly, a user can load a new configuration file, which stops the current simulation and starts the new one. Since we have designed our user interface in a such a way that a user is not reporting inputs to the system, there will not be miscellaneous erroneous situations. 
 
-![Game Design Drawing 2](doc/Screen Shot 2018-01-29 at 10.33.13 PM.png "Game Design 2")
+![Game Design Drawing 2](doc/UIDesign.png "User Interface Design")
 ## Design Details 
 This section describes each component introduced in the Overview in detail (as well as any other sub-components that may be needed but are not significant to include in a high-level description of the program). It should describe how each component handles specific features given in the assignment specification, what resources it might use, how it collaborates with other components, and how each could be extended to include additional requirements (from the assignment specification or discussed by your team). Include the steps needed to complete the Use Cases below to help make your descriptions more concrete. Finally, justify the decision to create each component with respect to the design's key goals, principles, and abstractions. This section should go into as much detail as necessary to cover all your team wants to say.
 
@@ -107,6 +107,6 @@ This section describes any issues which need to be addressed or resolved before 
 
 ## Team Responsibilities
 This section describes the program components each team member plans to take primary and secondary responsibility for and a high-level plan of how the team will complete the program.
-* Jamie Kim - Grid class and one other simulation.
-* Siyuan Chen - UI and Fire
+* Jamie Kim - UI and Fire simulation
+* Siyuan Chen - Cell and Simulation class, methods in Main class that combines functionalities of different elements, Segregation and Prey simulations.
 * Ryan Suggs - Reader class and Game of Life simulation.
