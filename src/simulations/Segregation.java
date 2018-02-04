@@ -10,9 +10,11 @@ import main.Main;
 
 public class Segregation extends Simulation {
 	
-	private double myRedPercent = 0.45;
-	private double myBluePercent = 0.45;
 	private double myEmptyPercent = 0.1;
+	private double myRedBlueRatio = 1;
+	private double myRedPercent = (1-myEmptyPercent)*(myRedBlueRatio/(myRedBlueRatio+1));
+	private double myBluePercent = 1-myEmptyPercent-myRedPercent;
+	private double myMinSatisfaction;
 	
 	private ArrayList<Point> emptyPoints;
 
@@ -30,7 +32,7 @@ public class Segregation extends Simulation {
 				if (current.isRed()) satisfaction = countRedInNeighborsPercent(i,j);
 				else if (current.isBlue()) satisfaction = countBlueInNeighborsPercent(i,j);
 				else satisfaction = 100; // eliminate the possibility to move empty cells
-				if (satisfaction < myParameter) {
+				if (satisfaction < myMinSatisfaction) {
 					Point point = emptyPoints.get((int)(Math.random()*(emptyPoints.size()-1)));
 					Cell c = myCells.get(point.getMyRow()).get(point.getMyCol());
 					if (current.isBlue()) {
@@ -50,6 +52,10 @@ public class Segregation extends Simulation {
 		myCells = updatedCells;
 	}
 	
+	public void setMyMinSatisfaction(double minSatisfaction) {
+		myMinSatisfaction = minSatisfaction;
+	}
+
 	private double countRedInNeighborsPercent(int i, int j) {
 		double count = 0;
 		double total = 0;
@@ -75,7 +81,8 @@ public class Segregation extends Simulation {
 	}
 	
 	@Override
-	public void initialize(int numCells) {
+	public void initialize() {
+		int numCells = myNumCells;
 		emptyPoints = new ArrayList<>();
 		double cell_size = Main.GRID_SIZE/(double)numCells;
 		ArrayList<ArrayList<Cell>> cells = new ArrayList<>();

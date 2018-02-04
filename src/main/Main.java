@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import simulations.Segregation;
 import simulations.Simulation;
+import simulations.WaTor;
 
 public class Main extends Application {
 
@@ -22,7 +23,7 @@ public class Main extends Application {
     public static final int SCENE_HEIGHT = GRID_SIZE + 200;
     public static final String TITLE = "Cell Society";
     public static final Paint BACKGROUND = Color.WHITE;
-    public static final int FRAMES_PER_SECOND = 1;
+    public static final int FRAMES_PER_SECOND = 10;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	
@@ -33,7 +34,11 @@ public class Main extends Application {
     
 	@Override
 	public void start(Stage stage) {
-		Simulation simulation = new Segregation(30);
+		//Simulation simulation = new Segregation(30);
+		//simulation.setMyMinSatisfaction(0.5);
+		Simulation simulation = new WaTor(30);
+		simulation.initialize();
+
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		stage.setScene(myScene);
         stage.setTitle(TITLE);
@@ -51,8 +56,6 @@ public class Main extends Application {
 		Group root = new Group();
 		Scene scene = new Scene(root, width, height, BACKGROUND);
 		
-		simulation.initialize(10);
-		simulation.setMyParameter(0.5);
 		myCells = simulation.getMyCells();
 		mySimulation = simulation;
 		
