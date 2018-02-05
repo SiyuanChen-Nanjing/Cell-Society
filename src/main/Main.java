@@ -1,6 +1,3 @@
-//		https://github.com/meb100/Cell-Society/blob/b41f4846744bb860a4550123f2a35257e3e61916/src/simulation/SettingsPanel.java
-//		https://github.com/shduke/Cell-Society/search?utf8=%E2%9C%93&q=toolbar&type=
-
 package main;
 
 import java.io.File;
