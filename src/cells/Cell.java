@@ -14,7 +14,6 @@ public abstract class Cell {
 	protected boolean isBlue = false;
 	
 	protected boolean isBurning = false;
-	protected boolean isBurntEmpty = false;
 	protected boolean isTree = false;
 	
 	public Cell(double x_pos, double y_pos, double width, double height) {
@@ -32,10 +31,6 @@ public abstract class Cell {
 	
 	public boolean isBurning() {
 		return isBurning;
-	}
-	
-	public boolean isBurntEmpty() {
-		return isBurntEmpty;
 	}
 	
 	public boolean isTree() {
