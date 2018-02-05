@@ -1,6 +1,11 @@
 package main;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import cells.Cell;
 import javafx.animation.KeyFrame;
@@ -12,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import simulations.GameOfLife;
 import simulations.Segregation;
 import simulations.Simulation;
 import simulations.WaTor;
@@ -33,10 +39,8 @@ public class Main extends Application {
     private Group myRoot;
     
 	@Override
-	public void start(Stage stage) {
-		//Simulation simulation = new Segregation(30);
-		//simulation.setMyMinSatisfaction(0.5);
-		Simulation simulation = new WaTor(30);
+	public void start(Stage stage) throws SAXException, IOException, ParserConfigurationException {
+		Simulation simulation = XMLReader.setupSimulation("./data/GameOfLife_test.xml");
 		simulation.initialize();
 
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);

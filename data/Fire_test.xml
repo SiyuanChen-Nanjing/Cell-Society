@@ -1,0 +1,5 @@
+<Simulation>
+	<type>"Fire"</type>
+	<size>20</size>
+    	<probCatch>0.45</probCatch>
+</Simulation>

@@ -106,5 +106,12 @@ public class Segregation extends Simulation {
 		}
 		myCells = cells;
 	}
-
+	
+	public void setEmptyPercent(double empty) {
+		myEmptyPercent = empty;
+	}
+	
+	public void setRatio(double ratio) {
+		myRedBlueRatio = ratio;
+	}
 }

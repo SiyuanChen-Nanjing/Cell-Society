@@ -1,0 +1,5 @@
+<Simulation>
+	<type>GameOfLife</type>
+	<size>10</size>
+    	<aliveDeadRatio>3</aliveDeadRatio>
+</Simulation>
