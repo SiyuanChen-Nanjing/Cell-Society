@@ -16,5 +16,4 @@ public class EmptyCell extends Cell {
 		myRectangle.setFill(Color.WHITE);
 	}
 	
-	
 }

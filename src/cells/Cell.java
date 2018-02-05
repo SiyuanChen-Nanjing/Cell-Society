@@ -10,7 +10,10 @@ public abstract class Cell {
 	
 	protected boolean isRed = false;
 	protected boolean isBlue = false;
-	
+
+	protected boolean isBurning = false;
+	protected boolean isTree = false;
+
 	protected boolean isFish = false;
 	protected boolean isShark = false;
 	
@@ -59,5 +62,13 @@ public abstract class Cell {
 
 	public boolean isEmpty() {
 		return isEmpty;
+	}
+
+	public boolean isBurning() {
+		return isBurning;
+	}
+	
+	public boolean isTree() {
+		return isTree;
 	}
 }
