@@ -49,14 +49,14 @@ public class Main extends Application {
 	private Scene myScene;
 	private Group myRoot;
 	private Slider prob;
-	private Slider grid_size;
+	private Slider gridSize;
 	private Slider delay;
-	private Label prob_label;
-	private Label prob_value;
-	private Label grid_label;
-	private Label grid_value;
-	private Label delay_label;
-	private Label delay_value;
+	private Label probLabel;
+	private Label probValue;
+	private Label gridLabel;
+	private Label gridValue;
+	private Label delayLabel;
+	private Label delayValue;
 	private int simulation_size;
 	private VBox sliders;
 	
@@ -83,13 +83,16 @@ public class Main extends Application {
 		stage.setScene(myScene);
 		stage.setTitle(TITLE);
 		stage.show();
+		if (isRunning) {
 		// attach "game loop" to timeline to play it
 		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
 				e -> step(SECOND_DELAY));
+		
 		Timeline animation = new Timeline();
 		animation.setCycleCount(Timeline.INDEFINITE);
 		animation.getKeyFrames().add(frame);
 		animation.play();
+		}
 	}
 
 	private Scene setupScene(int width, int height, Simulation simulation) {
@@ -126,56 +129,59 @@ public class Main extends Application {
 	
 
 	public void setSettings(Group root, Scene scene) {
-		GridPane grid = new GridPane();
-		
-	    grid.setPadding(new Insets(10, 10, 10, 10));
-	    grid.setVgap(10);
-	    grid.setHgap(50);
+		GridPane sliders = new GridPane();
+	    sliders.setPadding(new Insets(10, 10, 10, 10));
+	    sliders.setVgap(200);
+	    sliders.setHgap(50);
+//	    sliders.setGridLinesVisible(true);
 	    
-	    prob_label = new Label("probability: ");
+	    probLabel = new Label("probability: ");
 	    prob = new Slider();
 		prob.setMin(0.0);
 		prob.setMax(1.0);
 		prob.setBlockIncrement(0.05);
-		prob_value = new Label(Double.toString(prob.getValue()));
-        GridPane.setConstraints(prob_label, 0, 2);
-		grid.getChildren().add(prob_label);
-		GridPane.setConstraints(prob, 1, 2);
-		grid.getChildren().add(prob);
-		GridPane.setConstraints(prob_value, 2, 2);
-        grid.getChildren().add(prob_value);
+		probValue = new Label(Double.toString(prob.getValue()));
+        GridPane.setConstraints(probLabel, 0, 44);
+		sliders.getChildren().add(probLabel);
+		GridPane.setConstraints(prob, 1, 44);
+		sliders.getChildren().add(prob);
+		GridPane.setConstraints(probValue, 2, 44);
+        sliders.getChildren().add(probValue);
 
-        grid.setVgap(10);
+        sliders.setVgap(10);
 
-		grid_label = new Label("grid size n x n: ");
-		grid_size = new Slider();
-		grid_size.setMin(10);
-		grid_size.setMax(50);
-		grid_size.setBlockIncrement(5);
-		grid_value = new Label(Double.toString(grid_size.getValue()));
-        GridPane.setConstraints(grid_label, 0, 2);
-		grid.getChildren().add(grid_label);
-		GridPane.setConstraints(grid_size, 1, 2);
-		grid.getChildren().add(grid_size);
-		GridPane.setConstraints(grid_value, 2, 2);
-        grid.getChildren().add(grid_value);
+		gridLabel = new Label("grid size n x n: ");
+		gridSize = new Slider();
+		gridSize.setMin(10);
+		gridSize.setMax(50);
+		gridSize.setBlockIncrement(5);
+		gridValue = new Label(Double.toString(gridSize.getValue()));
+        GridPane.setConstraints(gridLabel, 0, 48);
+		sliders.getChildren().add(gridLabel);
+		GridPane.setConstraints(gridSize, 1, 48);
+		sliders.getChildren().add(gridSize);
+		GridPane.setConstraints(gridValue, 2, 48);
+        sliders.getChildren().add(gridValue);
         
-        grid.setVgap(10);
+        sliders.setVgap(10);
         
-	    delay_label = new Label("delay: ");
+	    delayLabel = new Label("delay: ");
 		delay = new Slider();
 		delay.setMin(0.0);
 		delay.setMax(3000);
 		delay.setBlockIncrement(200);
-		delay_value = new Label(Double.toString(delay.getValue()));
-		GridPane.setConstraints(delay_label, 0, 3);
-		grid.getChildren().add(delay_label);
-		GridPane.setConstraints(delay, 1, 3);
-		grid.getChildren().add(delay);
-		GridPane.setConstraints(delay_value, 2, 3);
-        grid.getChildren().add(delay_value);
+		delayValue = new Label(Double.toString(delay.getValue()));
+		GridPane.setConstraints(delayLabel, 0, 52);
+		sliders.getChildren().add(delayLabel);
+		GridPane.setConstraints(delay, 1, 52);
+		sliders.getChildren().add(delay);
+		GridPane.setConstraints(delayValue, 2, 52);
+        sliders.getChildren().add(delayValue);
 		
-        myRoot.getChildren().add(grid);
+        myRoot.getChildren().add(sliders);
+
+        
+        GridPane buttons = new GridPane();
 
 		Button start = new Button("START");
         start.setMinWidth(BUTTON_WIDTH);
@@ -187,13 +193,12 @@ public class Main extends Application {
         });
         
         
-        
 		Button reset = new Button("RESET");
         reset.setMinWidth(BUTTON_WIDTH);
         reset.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                isRunning = true; //keep
+                isRunning = true; 
                 setupScene(SCENE_WIDTH, SCENE_HEIGHT, mySimulation);
             }
         });
@@ -222,15 +227,17 @@ public class Main extends Application {
         load.setMinWidth(BUTTON_WIDTH);
 
 
-        grid.setVgap(200);
-        grid.setHgap(11);
-        grid.add(start, 0, 3, 1, 1);
+        buttons.setVgap(200);
+        buttons.setHgap(11);
+        buttons.add(start, 0, 3, 1, 1);
 
-        grid.add(reset, 1, 3, 1, 1);
-        grid.add(stop, 2, 3, 1, 1);
+        buttons.add(reset, 1, 3, 1, 1);
+        buttons.add(stop, 2, 3, 1, 1);
         
-        grid.add(step, 3, 3, 1, 1);
-        grid.add(load, 4, 3, 1, 1);
+        buttons.add(step, 3, 3, 1, 1);
+        buttons.add(load, 4, 3, 1, 1);
+        myRoot.getChildren().add(buttons);
+
 
 	}
 
