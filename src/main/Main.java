@@ -77,6 +77,7 @@ public class Main extends Application {
 
 		//myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 
+<<<<<<< HEAD
 		//		GridPane grid = new GridPane();
 		//		grid.setVgap(10);
 		//		grid.setHgap(70);
@@ -84,6 +85,8 @@ public class Main extends Application {
 		//		myScene.setRoot(grid);
 
 
+=======
+>>>>>>> 4fa7353211329d8ea3b6c2edc909e9bc7894555a
 		stage.setScene(myScene);
 		stage.setTitle(TITLE);
 		stage.show();
@@ -102,7 +105,11 @@ public class Main extends Application {
 	private Scene setupScene(int width, int height, Simulation simulation) {
 		Group root = new Group();
 		Scene scene = new Scene(root, width, height, BACKGROUND);
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> 4fa7353211329d8ea3b6c2edc909e9bc7894555a
 		simulation.initialize();
 		//simulation.setMyParameter(0.5);
 
@@ -116,6 +123,7 @@ public class Main extends Application {
 			}
 		}
 		myRoot = root;
+<<<<<<< HEAD
 		setSettings(myRoot, myScene);
 
 		return scene;
@@ -131,6 +139,23 @@ public class Main extends Application {
 				for (int j = 1; j<myCells.size()-1;j++) myRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 			setSettings(myRoot, myScene);
 		}
+=======
+		
+		setSettings();
+		
+		myRoot = root;
+		return scene;
+	}
+	
+	private void step(double timeElapsed) {	
+		mySimulation.evolve();
+
+		myRoot.getChildren().clear();
+		myCells = mySimulation.getMyCells();
+		for (int i=1;i<myCells.size()-1;i++) 
+			for (int j = 1; j<myCells.size()-1;j++) myRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
+		setSettings();
+>>>>>>> 4fa7353211329d8ea3b6c2edc909e9bc7894555a
 	}
 
 
@@ -254,6 +279,14 @@ public class Main extends Application {
 		myRoot.getChildren().add(buttons);
 
 
+<<<<<<< HEAD
+=======
+        grid.add(reset, 1, 2, 1, 1);
+        grid.add(stop, 2, 2, 1, 1);
+        
+        grid.add(step, 3, 2, 1, 1);
+        grid.add(load, 4, 2, 1, 1);
+>>>>>>> 4fa7353211329d8ea3b6c2edc909e9bc7894555a
 	}
 
 

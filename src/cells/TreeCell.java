@@ -1,7 +1,5 @@
 package cells;
 
-import java.util.ArrayList;
-
 import javafx.scene.paint.Color;
 
 public class TreeCell extends Cell {
