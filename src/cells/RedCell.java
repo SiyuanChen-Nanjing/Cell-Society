@@ -1,7 +1,5 @@
 package cells;
 
-import java.util.ArrayList;
-
 import javafx.scene.paint.Color;
 
 public class RedCell extends Cell {
@@ -11,4 +9,5 @@ public class RedCell extends Cell {
 		isRed = true;
 		myRectangle.setFill(Color.TOMATO);
 	}
+
 }

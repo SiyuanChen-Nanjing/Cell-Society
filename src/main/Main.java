@@ -19,6 +19,7 @@ import javafx.util.Duration;
 import simulations.Segregation;
 import simulations.Simulation;
 import simulations.FireSimulation;
+import simulations.WaTor;
 
 public class Main extends Application {
 
@@ -39,9 +40,18 @@ public class Main extends Application {
     
 	@Override
 	public void start(Stage stage) {
+
 //		Simulation simulation = new Segregation(30);
 		mySimulation = new FireSimulation(30);
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, mySimulation);
+
+		//Simulation simulation = new Segregation(30);
+		//simulation.setMyMinSatisfaction(0.5);
+		Simulation simulation = new WaTor(30);
+		simulation.initialize();
+
+		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
+
 		stage.setScene(myScene);
         stage.setTitle(TITLE);
         stage.show();
@@ -58,24 +68,26 @@ public class Main extends Application {
 		Group root = new Group();
 		Scene scene = new Scene(root, width, height, BACKGROUND);
 		
-		simulation.initialize(30);
-		simulation.setMyParameter(0.5);
+		simulation.initialize();
+		//simulation.setMyParameter(0.5);
+
 		myCells = simulation.getMyCells();
 		mySimulation = simulation;
 		
 		for (int i=1;i<myCells.size()-1;i++) {
 			for (int j = 1; j<myCells.size()-1;j++) root.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 		}
-
-		
 		myRoot = root;
 		
 		setSettings();
+		
+		myRoot = root;
 		return scene;
 	}
 	
-	private void step(double timeElapsed) {
-//		mySimulation.evolve();
+	private void step(double timeElapsed) {	
+		mySimulation.evolve();
+
 		myRoot.getChildren().clear();
 		myCells = mySimulation.getMyCells();
 		for (int i=1;i<myCells.size()-1;i++) 
@@ -142,7 +154,6 @@ public class Main extends Application {
         
         grid.add(step, 3, 2, 1, 1);
         grid.add(load, 4, 2, 1, 1);
-       
 	}
 	
 	public static void main(String[] args) {
