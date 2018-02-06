@@ -8,14 +8,17 @@ public abstract class Cell {
 	protected boolean isEmpty = false;;
 	protected Rectangle myRectangle;
 	
-	protected boolean isRed = false;
-	protected boolean isBlue = false;
-
 	protected boolean isBurning = false;
 	protected boolean isTree = false;
-
+	
+	protected boolean isRed = false;
+	protected boolean isBlue = false;
+	
 	protected boolean isFish = false;
 	protected boolean isShark = false;
+	
+	protected boolean isAlive = false;
+	protected boolean isDead = false;
 	
 	private int myGridX;
 	private int myGridY;
@@ -64,6 +67,10 @@ public abstract class Cell {
 		return isEmpty;
 	}
 
+	public boolean isAlive() {
+		return isAlive;
+	}
+	
 	public boolean isBurning() {
 		return isBurning;
 	}
@@ -71,4 +78,9 @@ public abstract class Cell {
 	public boolean isTree() {
 		return isTree;
 	}
+
+	public boolean isDead() {
+		return isDead;
+	}
+	
 }
