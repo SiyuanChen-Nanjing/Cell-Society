@@ -2,19 +2,20 @@
 
 <Simulation>
 	<basic>
-		<type>Segregation</type>
-		<title>Segregation</title>
+		<type>WaTor</type>
+		<title>Predator and Prey</title>
 		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
 	</basic>
 	
 	<globalSettings>
-		<satisfaction>0.4</satisfaction>
+		<fishRoundsToReproduce>2</fishRoundsToReproduce>
+		<sharkRoundsToReproduce>4</sharkRoundsToReproduce>
 	</globalSettings>
 	
 	<initialization>
 		<size>15</size>
 		<emptyPercent>0.1</emptyPercent>
-    		<redBlueRatio>1</redBlueRatio>
+    		<fishSharkRatio>3</fishSharkRatio>
 	</initialization>
     
 </Simulation>

@@ -1,5 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <Simulation>
-	<type>GameOfLife</type>
-	<size>10</size>
-    	<aliveDeadRatio>3</aliveDeadRatio>
+	<basic>
+		<type>GameOfLife</type>
+		<title>Conway's Game of Life</title>
+		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+	</basic>
+	
+	<globalSettings>
+	</globalSettings>
+	
+	<initialization>
+		<size>30</size>
+		<aliveDeadRatio>100</aliveDeadRatio>
+	</initialization>
+    
 </Simulation>
