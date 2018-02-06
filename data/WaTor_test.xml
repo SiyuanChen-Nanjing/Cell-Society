@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Simulation>
+	<basic>
+		<type>WaTor</type>
+		<title>Predator and Prey</title>
+		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+	</basic>
+	
+	<globalSettings>
+		<fishRoundsToReproduce>2</fishRoundsToReproduce>
+		<sharkRoundsToReproduce>4</sharkRoundsToReproduce>
+	</globalSettings>
+	
+	<initialization>
+		<size>15</size>
+		<emptyPercent>0.1</emptyPercent>
+    		<fishSharkRatio>3</fishSharkRatio>
+	</initialization>
+    
+</Simulation>

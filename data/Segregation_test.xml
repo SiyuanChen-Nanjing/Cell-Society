@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <Simulation>
 	<type>Segregation</type>
 	<size>15</size>
@@ -5,3 +6,25 @@
     	<redBlueRatio>1</redBlueRatio>
     	<satisfaction>0.4</satisfaction>
 </Simulation>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Simulation>
+	<basic>
+		<type>Segregation</type>
+		<title>Segregation</title>
+		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+	</basic>
+	
+	<globalSettings>
+		<satisfaction>0.4</satisfaction>
+	</globalSettings>
+	
+	<initialization>
+		<size>15</size>
+		<emptyPercent>0.1</emptyPercent>
+    		<redBlueRatio>1</redBlueRatio>
+	</initialization>
+    
+</Simulation>
+>>>>>>> b8d50fe52f0076f1f930c6dd15c4d68e80b0889a

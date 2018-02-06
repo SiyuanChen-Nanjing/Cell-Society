@@ -1,5 +1,26 @@
+<<<<<<< HEAD
 <Simulation>
 	<type>"Fire"</type>
 	<size>20</size>
     	<probCatch>0.45</probCatch>
 </Simulation>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Simulation>
+	<basic>
+		<type>Fire</type>
+		<title>Spread of Fire</title>
+		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+	</basic>
+	
+	<globalSettings>
+		<probCatch>0.45</probCatch>
+	</globalSettings>
+	
+	<initialization>
+		<size>20</size>
+	</initialization>
+    
+</Simulation>
+>>>>>>> b8d50fe52f0076f1f930c6dd15c4d68e80b0889a

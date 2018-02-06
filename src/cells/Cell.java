@@ -70,6 +70,10 @@ public abstract class Cell {
 	public boolean isAlive() {
 		return isAlive;
 	}
+
+	public boolean isDead() {
+		return isDead;
+	}
 	
 	public boolean isBurning() {
 		return isBurning;
@@ -79,8 +83,4 @@ public abstract class Cell {
 		return isTree;
 	}
 
-	public boolean isDead() {
-		return isDead;
-	}
-	
 }
