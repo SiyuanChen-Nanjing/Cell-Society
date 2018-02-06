@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Simulation>
+	<basic>
+		<type>Fire</type>
+		<title>Spread of Fire</title>
+		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+	</basic>
+	
+	<globalSettings>
+		<probCatch>0.45</probCatch>
+	</globalSettings>
+	
+	<initialization>
+		<size>20</size>
+	</initialization>
+    
+</Simulation>

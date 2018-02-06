@@ -17,6 +17,9 @@ public abstract class Cell {
 	protected boolean isFish = false;
 	protected boolean isShark = false;
 	
+	protected boolean isAlive = false;
+	protected boolean isDead = false;
+	
 	private int myGridX;
 	private int myGridY;
 
@@ -64,6 +67,14 @@ public abstract class Cell {
 		return isEmpty;
 	}
 
+	public boolean isAlive() {
+		return isAlive;
+	}
+
+	public boolean isDead() {
+		return isDead;
+	}
+	
 	public boolean isBurning() {
 		return isBurning;
 	}

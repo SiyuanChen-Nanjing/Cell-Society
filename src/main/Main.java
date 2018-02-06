@@ -1,279 +1,244 @@
 package main;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import cells.Cell;
-import exceptions.XMLException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import simulations.Segregation;
 import simulations.Simulation;
-import simulations.FireSimulation;
-import simulations.WaTor;
 
 public class Main extends Application {
 
 	public static final int GRID_SIZE = 400;
-	public static final int SCENE_WIDTH = GRID_SIZE;
-	public static final int SCENE_HEIGHT = GRID_SIZE + 250;
-	public static final String TITLE = "Cell Society";
-	public static final Paint BACKGROUND = Color.WHITE;
-	public static final int FRAMES_PER_SECOND = 1;
-	public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
-	public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-	private int BUTTON_WIDTH = 70;
-	private boolean isRunning = true;
-	private Simulation mySimulation;
-	private ArrayList<ArrayList<Cell>> myCells;
-	private Scene myScene;
-	private Group myRoot;
-	private Slider prob;
-	private Slider gridSize;
-	private Slider delay;
-	private Label probLabel;
-	private Label probValue;
-	private Label gridLabel;
-	private Label gridValue;
-	private Label delayLabel;
-	private Label delayValue;
-	private int simulation_size;
-	private File myFile;
+    public static final int SCENE_WIDTH = GRID_SIZE;
+    public static final int SCENE_HEIGHT = GRID_SIZE + 200;
+    public static final Paint BACKGROUND = Color.WHITE;
+	
+    private String myTitle;
+    private int myFrameRate = 3;
+    private int myMillisecondDelay = 1000 / myFrameRate;
+    private double mySecondDelay = 1.0 / myFrameRate;
+    
+    private Stage myStage;
+    private Simulation mySimulation;
+    private ArrayList<ArrayList<Cell>> myCells;
+    private Scene myScene;
+    private Group myRoot;
+    private Group myButtonRoot;
+    private Group myGridRoot;
+    private Timeline myAnimation;
+    private File myCurrentFile;
+    
+    private Button myStartButton;
+    private Button myPauseButton;
+    private Button myResumeButton;
+    private Button myStepButton;
+    private Button myLoadButton;
+    private Button myFasterButton;
+    private Button mySlowerButton;
+    private Button myRestartButton;
 
 
 	@Override
-	public void start(Stage stage) {
-
-		mySimulation = new FireSimulation(30);
-		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, mySimulation);
-
-		//Simulation simulation = new Segregation(30);
-		//simulation.setMyMinSatisfaction(0.5);
-		//Simulation simulation = new WaTor(30);
-		//simulation.initialize();
-
-		//myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
-
-		//		GridPane grid = new GridPane();
-		//		grid.setVgap(10);
-		//		grid.setHgap(70);
-		//		grid.getChildren().add(mySimulation);
-		//		myScene.setRoot(grid);
-
+	public void start(Stage stage) throws SAXException, IOException, ParserConfigurationException {
+		FileChooser fc = new FileChooser();
+		File file = fc.showOpenDialog(stage);
+		myCurrentFile = file;
+		Simulation simulation = XMLReader.setupSimulation(file);
+		simulation.initialize();
+		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
+		myTitle = XMLReader.getTitle(file);
 
 		stage.setScene(myScene);
-		stage.setTitle(TITLE);
-		stage.show();
-		if (isRunning) {
-			// attach "game loop" to timeline to play it
-			KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
-					e -> step(SECOND_DELAY));
+        stage.setTitle(myTitle);
+        stage.show();
+        myStage = stage;
+        // attach "game loop" to timeline to play it
+        KeyFrame frame = new KeyFrame(Duration.millis(myMillisecondDelay),
+                                      e -> step(mySecondDelay));
+        Timeline animation = new Timeline();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.getKeyFrames().add(frame);
+        myAnimation = animation;
 
-			Timeline animation = new Timeline();
-			animation.setCycleCount(Timeline.INDEFINITE);
-			animation.getKeyFrames().add(frame);
-			animation.play();
-		}
 	}
 
 	private Scene setupScene(int width, int height, Simulation simulation) {
 		Group root = new Group();
+		Group buttonRoot = new Group();
+		Group gridRoot = new Group();
+		
+		root.getChildren().add(buttonRoot);
+		root.getChildren().add(gridRoot);
+		
 		Scene scene = new Scene(root, width, height, BACKGROUND);
-
-
-		simulation.initialize();
-		//simulation.setMyParameter(0.5);
 
 		myCells = simulation.getMyCells();
 		mySimulation = simulation;
-
-
 		for (int i=1;i<myCells.size()-1;i++) {
 			for (int j = 1; j<myCells.size()-1;j++) {
-				root.getChildren().add(myCells.get(i).get(j).getMyRectangle());
+				gridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 			}
 		}
 		myRoot = root;
-		setSettings(myRoot, myScene);
+		myButtonRoot = buttonRoot;
+		myGridRoot = gridRoot;
+		
+		setupUI("assets.ButtonText");
+		loadUI();
 
 		return scene;
 	}
 
 	private void step(double timeElapsed) {
-		if (isRunning) {
-			mySimulation.evolve();
-			myRoot.getChildren().clear();
-			//		setSettings here will make it reset everytime..here.
-			myCells = mySimulation.getMyCells();
-			for (int i=1;i<myCells.size()-1;i++) 
-				for (int j = 1; j<myCells.size()-1;j++) myRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
-			setSettings(myRoot, myScene);
-		}
-		setSettings(myRoot, myScene);		
+		mySimulation.evolve();
+		myGridRoot.getChildren().clear();
+		myCells = mySimulation.getMyCells();
+		for (int i=1;i<myCells.size()-1;i++) 
+			for (int j = 1; j<myCells.size()-1;j++) myGridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 	}
-
-
-	public void setSettings(Group root, Scene scene) {
-		GridPane sliders = new GridPane();
-		sliders.setPadding(new Insets(10, 10, 10, 10));
-		sliders.setVgap(200);
-		sliders.setHgap(50);
-		//	    sliders.setGridLinesVisible(true);
-
-		probLabel = new Label("probability: ");
-		prob = new Slider();
-		prob.setMin(0.0);
-		prob.setMax(1.0);
-		prob.setBlockIncrement(0.05);
-		probValue = new Label(Double.toString(prob.getValue()));
-		GridPane.setConstraints(probLabel, 0, 44);
-		sliders.getChildren().add(probLabel);
-		GridPane.setConstraints(prob, 1, 44);
-		sliders.getChildren().add(prob);
-		GridPane.setConstraints(probValue, 2, 44);
-		sliders.getChildren().add(probValue);
-
-		sliders.setVgap(10);
-
-		gridLabel = new Label("grid size n x n: ");
-		gridSize = new Slider();
-		gridSize.setMin(10);
-		gridSize.setMax(50);
-		gridSize.setBlockIncrement(5);
-		gridValue = new Label(Double.toString(gridSize.getValue()));
-		GridPane.setConstraints(gridLabel, 0, 48);
-		sliders.getChildren().add(gridLabel);
-		GridPane.setConstraints(gridSize, 1, 48);
-		sliders.getChildren().add(gridSize);
-		GridPane.setConstraints(gridValue, 2, 48);
-		sliders.getChildren().add(gridValue);
-
-		sliders.setVgap(10);
-
-		delayLabel = new Label("delay: ");
-		delay = new Slider();
-		delay.setMin(0.0);
-		delay.setMax(3000);
-		delay.setBlockIncrement(200);
-		delayValue = new Label(Double.toString(delay.getValue()));
-		GridPane.setConstraints(delayLabel, 0, 52);
-		sliders.getChildren().add(delayLabel);
-		GridPane.setConstraints(delay, 1, 52);
-		sliders.getChildren().add(delay);
-		GridPane.setConstraints(delayValue, 2, 52);
-		sliders.getChildren().add(delayValue);
-
-		myRoot.getChildren().add(sliders);
-
-
-		GridPane buttons = new GridPane();
-
-		Button start = new Button("START");
-		start.setMinWidth(BUTTON_WIDTH);
-		start.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				isRunning = true;
+	
+	private void loadUI() {
+		myButtonRoot.getChildren().add(myStartButton);
+		myButtonRoot.getChildren().add(myPauseButton);
+		myButtonRoot.getChildren().add(myResumeButton);
+		myButtonRoot.getChildren().add(myStepButton);
+		myButtonRoot.getChildren().add(myLoadButton);
+		myButtonRoot.getChildren().add(myFasterButton);
+		myButtonRoot.getChildren().add(mySlowerButton);
+		myButtonRoot.getChildren().add(myRestartButton);
+	}
+	
+	private void setupUI(String filename) {
+		ResourceBundle rb = ResourceBundle.getBundle("assets.ButtonText");
+		myStartButton = createStartButton(rb.getString("StartKey"));
+		myPauseButton = createPauseButton(rb.getString("PauseKey"));
+		myResumeButton = createResumeButton(rb.getString("ResumeKey"));
+		myStepButton = createStepButton(rb.getString("StepKey"));
+		myLoadButton = createLoadButton(rb.getString("LoadKey"));
+		myFasterButton = createFasterButton(rb.getString("FasterKey"));
+		mySlowerButton = createSlowerButton(rb.getString("SlowerKey"));
+		myRestartButton = createRestartButton(rb.getString("RestartKey"));
+	}
+	
+	private Button createStartButton(String txt) {
+		Button start = new Button(txt);
+		start.setLayoutX(50);
+		start.setLayoutY(500);
+		start.setOnMouseClicked(e -> {
+			myAnimation.play();
+		});
+		return start;
+	}
+	
+	private Button createPauseButton(String txt) {
+		Button pause = new Button(txt);
+		pause.setLayoutX(100);
+		pause.setLayoutY(500);
+		pause.setOnMouseClicked(e -> {
+			myAnimation.pause();
+		});
+		return pause;
+	}
+	
+	private Button createResumeButton(String txt) {
+		Button resume = new Button(txt);
+		resume.setLayoutX(170);
+		resume.setLayoutY(500);
+		resume.setOnMouseClicked(e -> {
+			myAnimation.play();
+		});
+		return resume;
+	}
+	
+	private Button createStepButton(String txt) {
+		Button stop = new Button(txt);
+		stop.setLayoutX(250);
+		stop.setLayoutY(500);
+		stop.setOnMouseClicked(e -> {
+			myAnimation.pause();
+			step(mySecondDelay);
+		});
+		return stop;
+	}
+	
+	private Button createLoadButton(String txt) {
+		Button load = new Button(txt);
+		load.setLayoutX(300);
+		load.setLayoutY(500);
+		load.setOnMouseClicked(e -> {
+			myAnimation.stop();
+			FileChooser fc = new FileChooser();
+			fc.setTitle("Load Configuration XML File");
+			File file = fc.showOpenDialog(myStage);
+			try {
+				changeSimulation(file);
+			} catch (SAXException | IOException | ParserConfigurationException e1) {
+				throw new IllegalArgumentException("The file you have chosen has the wrong format.");
 			}
 		});
-
-
-		Button reset = new Button("RESET");
-		reset.setMinWidth(BUTTON_WIDTH);
-		reset.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				isRunning = false; 
-				setupScene(SCENE_WIDTH, SCENE_HEIGHT, mySimulation);
-				isRunning = true;
+		return load;
+	}
+	
+	private Button createRestartButton(String txt) {
+		Button restart = new Button(txt);
+		restart.setLayoutX(180);
+		restart.setLayoutY(450);
+		restart.setOnMouseClicked(e -> {
+			try {
+				changeSimulation(myCurrentFile);
+				myAnimation.pause();
+			} catch (SAXException | IOException | ParserConfigurationException e1) {
+				throw new IllegalArgumentException("The file you have chosen has the wrong format.");
 			}
 		});
-
-		Button stop = new Button("STOP");
-		stop.setMinWidth(BUTTON_WIDTH);
-		stop.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				isRunning = false;
-			}
+		return restart;
+	}
+	
+	private Button createFasterButton(String txt) {
+		Button faster = new Button(txt);
+		faster.setLayoutX(100);
+		faster.setLayoutY(550);
+		faster.setOnMouseClicked(e -> {
+			myAnimation.setRate(myAnimation.getRate()*1.5);
 		});
-
-
-		Button step = new Button("STEP");
-		step.setMinWidth(BUTTON_WIDTH);
-		step.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent event) {
-				isRunning = false;
-				step(SECOND_DELAY);
-			}
+		return faster;
+	}
+	
+	private Button createSlowerButton(String txt) {
+		Button slower = new Button(txt);
+		slower.setLayoutX(200);
+		slower.setLayoutY(550);
+		slower.setOnMouseClicked(e -> {
+			myAnimation.setRate(myAnimation.getRate()*0.5);
 		});
-
-		Button load = new Button("LOAD");
-		load.setMinWidth(BUTTON_WIDTH);
-		load.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			@Override
-			public void handle(MouseEvent event) {
-				isRunning = false;
-				openFileChooser(new FileChooser());
-			}
-		});
-
-
-		buttons.setVgap(200);
-		buttons.setHgap(11);
-		buttons.add(start, 0, 3, 1, 1);
-
-		buttons.add(reset, 1, 3, 1, 1);
-		buttons.add(stop, 2, 3, 1, 1);
-
-		buttons.add(step, 3, 3, 1, 1);
-		buttons.add(load, 4, 3, 1, 1);
-		myRoot.getChildren().add(buttons);
-
+		return slower;
 	}
-
-
-	private void openFileChooser (FileChooser chooseFile) {
-		myFile = chooseFile.showOpenDialog(new Stage());
-		if (myFile != null) {
-			openFile(myFile);
-		}
+	
+	private void changeSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
+		Simulation simulation = XMLReader.setupSimulation(file);
+		simulation.initialize();
+		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
+		myStage.setScene(myScene);
+		myCurrentFile = file;
 	}
-
-	public void openFile (File file) throws XMLException {
-		try {
-			String filePath = file.getAbsolutePath();
-
-		}
-		catch (XMLException xmlexcept) {
-			throw new XMLException(xmlexcept, "XMLException");
-		}
-	}
-	public File getFile() {
-		return myFile;
-	}
-
+	
 	public static void main(String[] args) {
 		launch(args);
 	}

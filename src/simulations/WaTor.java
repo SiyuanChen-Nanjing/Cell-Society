@@ -16,7 +16,7 @@ public class WaTor extends Simulation {
 	private double mySharkPercent = 1-myEmptyPercent-myFishPercent;
 	
 	private int myFishRoundsToReproduce = 4;
-	private int mySharkRoundsToReproduce = 100;
+	private int mySharkRoundsToReproduce = 10;
 	
 	public WaTor(int numCells) {
 		super(numCells);
@@ -24,19 +24,23 @@ public class WaTor extends Simulation {
 
 	@Override
 	public void evolve() {
+		ArrayList<ArrayList<Cell>> updatedCells = new ArrayList<>(myCells);
 		for (int i = 1; i < myCells.size()-1;i++) {
 			for (int j = 1; j < myCells.size()-1;j++) {
 				Cell current = myCells.get(i).get(j);
-				if (current.isFish()) fishMove(i,j);
-				else if (current.isShark()) sharkMove(i,j);
+				if (current.isFish()) fishMove(i,j, updatedCells);
+				else if (current.isShark()) sharkMove(i,j, updatedCells);
 			}
 		}
+		myCells = updatedCells;
 	}
 
-	public void fishMove(int i, int j) {
+	public void fishMove(int i, int j, ArrayList<ArrayList<Cell>> updatedCells) {
 		FishCell current = (FishCell) myCells.get(i).get(j);
+		FishCell updated = (FishCell) updatedCells.get(i).get(j);
 		ArrayList<Point> empty = getMyEmptyNeighbors(i,j);
 		current.setMyRoundsSurvived(current.getMyRoundsSurvived()+1);
+		updated.setMyRoundsSurvived(current.getMyRoundsSurvived()+1);
 		if (!empty.isEmpty()) {
 			Point point = empty.get((int)(Math.random()*(empty.size()-1)));
 			Cell destination = myCells.get(point.getMyRow()).get(point.getMyCol());
@@ -45,24 +49,27 @@ public class WaTor extends Simulation {
 			moved.setMyRoundsSurvived(current.getMyRoundsSurvived());
 			
 			if (moved.getMyRoundsSurvived()>=myFishRoundsToReproduce) {
-				myCells.get(i).set(j, new FishCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
+				updatedCells.get(i).set(j, new FishCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 						current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 				moved.setMyRoundsSurvived(0);
 			}
 			else {
-				myCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
+				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 						current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 			}
-			myCells.get(point.getMyRow()).set(point.getMyCol(), moved);
+			updatedCells.get(point.getMyRow()).set(point.getMyCol(), moved);
 		}
 	}
 	
-	public void sharkMove(int i, int j) {
+	public void sharkMove(int i, int j, ArrayList<ArrayList<Cell>> updatedCells) {
 		SharkCell current = (SharkCell) myCells.get(i).get(j);
+		SharkCell updated = (SharkCell) updatedCells.get(i).get(j);
 		ArrayList<Point> fish = getMyFishNeighbors(i,j);
 		ArrayList<Point> empty = getMyEmptyNeighbors(i,j);
 		current.setMyEnergy(current.getMyEnergy()-1);
+		updated.setMyEnergy(current.getMyEnergy()-1);
 		current.setMyRoundsSurvived(current.getMyRoundsSurvived()+1);
+		updated.setMyRoundsSurvived(current.getMyRoundsSurvived()+1);
 		
 		if (!fish.isEmpty()) {
 			Point fishPoint = fish.get((int)(Math.random()*(fish.size()-1)));
@@ -73,19 +80,19 @@ public class WaTor extends Simulation {
 			fishMoved.setMyEnergy(current.getMyEnergy()+current.getFishEnergyGain());
 			
 			if (fishMoved.getMyRoundsSurvived()==mySharkRoundsToReproduce) {
-				myCells.get(i).set(j, new SharkCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
+				updatedCells.get(i).set(j, new SharkCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 						current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 				fishMoved.setMyRoundsSurvived(0);
 			}
 			else {
-				myCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
+				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 						current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 			}
-			myCells.get(fishPoint.getMyRow()).set(fishPoint.getMyCol(), fishMoved);
+			updatedCells.get(fishPoint.getMyRow()).set(fishPoint.getMyCol(), fishMoved);
 		}
 		else if (!empty.isEmpty()) {
 			if (current.getMyEnergy()<=0) {
-				myCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
+				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 			}
 			else {
@@ -96,20 +103,20 @@ public class WaTor extends Simulation {
 				moved.setMyRoundsSurvived(current.getMyRoundsSurvived());
 			
 				if (moved.getMyRoundsSurvived()==mySharkRoundsToReproduce) {
-					myCells.get(i).set(j, new SharkCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
+					updatedCells.get(i).set(j, new SharkCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 					moved.setMyRoundsSurvived(0);
 				}
 				else {
-					myCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
+					updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 				}
-				myCells.get(point.getMyRow()).set(point.getMyCol(), moved);
+				updatedCells.get(point.getMyRow()).set(point.getMyCol(), moved);
 			}
 		}
 		else {
 			if (current.getMyEnergy()<=0) {
-				myCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
+				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 			}
 		}
@@ -241,5 +248,13 @@ public class WaTor extends Simulation {
 		}
 		myCells = cells;
 	}
-
+	
+	public void setEmptyPercent(double empty) { myEmptyPercent = empty;}
+	
+	public void setRatio(double ratio) { myFishSharkRatio = ratio;}
+	
+	public void setReproductionRounds(int fish, int shark) {
+		myFishRoundsToReproduce = fish;
+		mySharkRoundsToReproduce = shark;
+	}
 }

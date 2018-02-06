@@ -1,21 +1,17 @@
 package simulations;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import cells.Cell;
 import cells.EmptyCell;
-import cells.RedCell;
-import cells.BlueCell;
 import cells.BurningCell;
 import cells.TreeCell;
 import main.Main;
 
-public class FireSimulation extends Simulation{
+public class Fire extends Simulation{
 	private double probCatch = 0.5;
-	private int burningTime;
 
-	public FireSimulation(int numCells) {
+	public Fire(int numCells) {
 		super(numCells);
 	}
 
@@ -80,4 +76,8 @@ public class FireSimulation extends Simulation{
 		myCells = cells;
 	}
 
+	public void setProbCatch(double prob) {
+		this.probCatch = prob;
+	}
+	
 }
