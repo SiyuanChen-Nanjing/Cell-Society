@@ -13,14 +13,13 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import simulations.GameOfLife;
-import simulations.Segregation;
 import simulations.Simulation;
-import simulations.WaTor;
+
 
 public class Main extends Application {
 
@@ -29,7 +28,7 @@ public class Main extends Application {
     public static final int SCENE_HEIGHT = GRID_SIZE + 200;
     public static final String TITLE = "Cell Society";
     public static final Paint BACKGROUND = Color.WHITE;
-    public static final int FRAMES_PER_SECOND = 10;
+    public static final int FRAMES_PER_SECOND = 5;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	
@@ -37,6 +36,7 @@ public class Main extends Application {
     private ArrayList<ArrayList<Cell>> myCells;
     private Scene myScene;
     private Group myRoot;
+    private Timeline myAnimation;
     
 	@Override
 	public void start(Stage stage) throws SAXException, IOException, ParserConfigurationException {
@@ -54,6 +54,7 @@ public class Main extends Application {
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.getKeyFrames().add(frame);
         animation.play();
+        myAnimation = animation;
 	}
 	
 	private Scene setupScene(int width, int height, Simulation simulation) {
@@ -66,9 +67,19 @@ public class Main extends Application {
 		for (int i=1;i<myCells.size()-1;i++) {
 			for (int j = 1; j<myCells.size()-1;j++) root.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 		}
-		
+		root.getChildren().add(myStop());
 		myRoot = root;
 		return scene;
+	}
+	
+	private Button myStop() {
+		Button start = new Button("Stop");
+		start.setLayoutX(200);
+		start.setLayoutY(500);
+		start.setOnMouseClicked(e -> {
+			myAnimation.stop();
+		});
+		return start;
 	}
 	
 	private void step(double timeElapsed) {
