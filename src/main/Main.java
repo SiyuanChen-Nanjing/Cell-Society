@@ -56,6 +56,10 @@ public class Main extends Application {
 
 
 	@Override
+	/**
+	 * Initialize animation by reading the XML file and create a scene according to information stored in the 
+	 * file
+	 */
 	public void start(Stage stage) throws SAXException, IOException, ParserConfigurationException {
 		FileChooser fc = new FileChooser();
 		File file = fc.showOpenDialog(stage);
@@ -79,6 +83,7 @@ public class Main extends Application {
 
 	}
 
+	// setup the main scene with given Simulation input object
 	private Scene setupScene(int width, int height, Simulation simulation) {
 		Group root = new Group();
 		Group buttonRoot = new Group();
@@ -106,6 +111,7 @@ public class Main extends Application {
 		return scene;
 	}
 
+	// update grid in each cycle
 	private void step(double timeElapsed) {
 		mySimulation.evolve();
 		myGridRoot.getChildren().clear();
@@ -114,6 +120,7 @@ public class Main extends Application {
 			for (int j = 1; j<myCells.size()-1;j++) myGridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 	}
 	
+	// load all the UI nodes into the group containing all the buttons
 	private void loadUI() {
 		myButtonRoot.getChildren().add(myStartButton);
 		myButtonRoot.getChildren().add(myPauseButton);
@@ -239,6 +246,9 @@ public class Main extends Application {
 		myCurrentFile = file;
 	}
 	
+	/**
+	 * start game
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

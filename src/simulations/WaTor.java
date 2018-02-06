@@ -35,7 +35,7 @@ public class WaTor extends Simulation {
 		myCells = updatedCells;
 	}
 
-	public void fishMove(int i, int j, ArrayList<ArrayList<Cell>> updatedCells) {
+	private void fishMove(int i, int j, ArrayList<ArrayList<Cell>> updatedCells) {
 		FishCell current = (FishCell) myCells.get(i).get(j);
 		FishCell updated = (FishCell) updatedCells.get(i).get(j);
 		ArrayList<Point> empty = getMyEmptyNeighbors(i,j);
@@ -61,7 +61,7 @@ public class WaTor extends Simulation {
 		}
 	}
 	
-	public void sharkMove(int i, int j, ArrayList<ArrayList<Cell>> updatedCells) {
+	private void sharkMove(int i, int j, ArrayList<ArrayList<Cell>> updatedCells) {
 		SharkCell current = (SharkCell) myCells.get(i).get(j);
 		SharkCell updated = (SharkCell) updatedCells.get(i).get(j);
 		ArrayList<Point> fish = getMyFishNeighbors(i,j);
@@ -122,7 +122,7 @@ public class WaTor extends Simulation {
 		}
 	}
 	
-	public ArrayList<Point> getMyEmptyNeighbors(int i, int j) {
+	private ArrayList<Point> getMyEmptyNeighbors(int i, int j) {
 		ArrayList<Point> empty = new ArrayList<>();
 		ArrayList<Cell> neighbors = getFourNeighbors(i,j);
 		if (i==1) {
@@ -173,7 +173,7 @@ public class WaTor extends Simulation {
 		return empty;
 	}
 	
-	public ArrayList<Point> getMyFishNeighbors(int i, int j) {
+	private ArrayList<Point> getMyFishNeighbors(int i, int j) {
 		ArrayList<Point> fish = new ArrayList<>();
 		ArrayList<Cell> neighbors = getFourNeighbors(i,j);
 		if (i==1) {

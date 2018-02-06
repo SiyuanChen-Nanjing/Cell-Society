@@ -18,17 +18,32 @@ import simulations.WaTor;
 
 public class XMLReader {
 	
+	/**
+	 * Using the Java DOMParser to parse an XML file into a Document
+	 * @param file XML configuration file
+	 * @return Document object containing the XML tree
+	 */
 	public static Document read(File file) throws SAXException, IOException, ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		return builder.parse(file);
 	}
 	
+	/**
+	 * Get the title of the simulation
+	 * @param file XML configuration file
+	 * @return title of the simulation
+	 */
 	public static String getTitle(File file) throws SAXException, IOException, ParserConfigurationException {
 		Document doc = read(file);
 		return doc.getElementsByTagName("title").item(0).getFirstChild().getNodeValue();
 	}
 	
+	/**
+	 * Create a Simulation from XML file
+	 * @param file XML configuration file
+	 * @return the Simulation object created using the information in the XML file
+	 */
 	public static Simulation setupSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
 		Document doc = read(file);
 		String type = doc.getElementsByTagName("type").item(0).getFirstChild().getNodeValue();
