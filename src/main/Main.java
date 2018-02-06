@@ -67,30 +67,16 @@ public class Main extends Application {
 		for (int i=1;i<myCells.size()-1;i++) {
 			for (int j = 1; j<myCells.size()-1;j++) root.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 		}
-		root.getChildren().add(myStop());
 		myRoot = root;
 		return scene;
 	}
 	
-	private Button myStop() {
-		Button start = new Button("Stop");
-		start.setLayoutX(200);
-		start.setLayoutY(500);
-		start.setOnMouseClicked(e -> {
-			myAnimation.stop();
-		});
-		return start;
-	}
-	
 	private void step(double timeElapsed) {
-		
 		mySimulation.evolve();
 		myRoot.getChildren().clear();
 		myCells = mySimulation.getMyCells();
 		for (int i=1;i<myCells.size()-1;i++) 
 			for (int j = 1; j<myCells.size()-1;j++) myRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
-
-		
 	}
 	
 	public static void main(String[] args) {
