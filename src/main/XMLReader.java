@@ -24,6 +24,11 @@ public class XMLReader {
 		return builder.parse(file);
 	}
 	
+	public static String getTitle(File file) throws SAXException, IOException, ParserConfigurationException {
+		Document doc = read(file);
+		return doc.getElementsByTagName("title").item(0).getFirstChild().getNodeValue();
+	}
+	
 	public static Simulation setupSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
 		Document doc = read(file);
 		String type = doc.getElementsByTagName("type").item(0).getFirstChild().getNodeValue();

@@ -28,9 +28,9 @@ public class Main extends Application {
 	public static final int GRID_SIZE = 400;
     public static final int SCENE_WIDTH = GRID_SIZE;
     public static final int SCENE_HEIGHT = GRID_SIZE + 200;
-    public static final String TITLE = "Cell Society";
     public static final Paint BACKGROUND = Color.WHITE;
 	
+    private String myTitle;
     private int myFrameRate = 3;
     private int myMillisecondDelay = 1000 / myFrameRate;
     private double mySecondDelay = 1.0 / myFrameRate;
@@ -63,9 +63,10 @@ public class Main extends Application {
 		Simulation simulation = XMLReader.setupSimulation(file);
 		simulation.initialize();
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
+		myTitle = XMLReader.getTitle(file);
 
 		stage.setScene(myScene);
-        stage.setTitle(TITLE);
+        stage.setTitle(myTitle);
         stage.show();
         myStage = stage;
         // attach "game loop" to timeline to play it
