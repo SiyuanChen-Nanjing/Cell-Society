@@ -20,7 +20,7 @@ public abstract class Simulation {
 	
 	public abstract void evolve();
 	
-	public abstract void initialize();
+	public abstract void initialize() ;
 	
 	public ArrayList<Cell> getNeighbors(int i, int j) {
 		ArrayList<Cell> neighbors = new ArrayList<>();

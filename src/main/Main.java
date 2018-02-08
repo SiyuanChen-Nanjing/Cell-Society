@@ -30,9 +30,10 @@ public class Main extends Application {
     public static final int SCENE_HEIGHT = GRID_SIZE + 200;
     public static final Paint BACKGROUND = Color.WHITE;
 	
-    private static final int FRAME_RATE = 3;
-    private static final int MILLISECOND_DELAY = 1000 / FRAME_RATE;
-    private static final double SECOND_DELAY = 1.0 / FRAME_RATE;
+    public static final int FRAME_RATE = 3;
+    public static final int MILLISECOND_DELAY = 1000 / FRAME_RATE;
+    public static final double SECOND_DELAY = 1.0 / FRAME_RATE;
+    public static final String XML_ERROR_MSG = "The file you have chosen has the wrong format.";
     
     private Stage myStage;
     private Simulation mySimulation;
@@ -133,7 +134,7 @@ public class Main extends Application {
 	}
 	
 	private void setupUI(String filename) {
-		ResourceBundle rb = ResourceBundle.getBundle("assets.ButtonText");
+		ResourceBundle rb = ResourceBundle.getBundle(filename);
 		myStartButton = createStartButton(rb.getString("StartKey"));
 		myPauseButton = createPauseButton(rb.getString("PauseKey"));
 		myResumeButton = createResumeButton(rb.getString("ResumeKey"));
@@ -197,7 +198,7 @@ public class Main extends Application {
 			try {
 				changeSimulation(file);
 			} catch (SAXException | IOException | ParserConfigurationException e1) {
-				throw new IllegalArgumentException("The file you have chosen has the wrong format.");
+				throw new IllegalArgumentException(XML_ERROR_MSG);
 			}
 		});
 		return load;
@@ -212,7 +213,7 @@ public class Main extends Application {
 				changeSimulation(myCurrentFile);
 				myAnimation.pause();
 			} catch (SAXException | IOException | ParserConfigurationException e1) {
-				throw new IllegalArgumentException("The file you have chosen has the wrong format.");
+				throw new IllegalArgumentException(XML_ERROR_MSG);
 			}
 		});
 		return restart;
