@@ -2,7 +2,7 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,14 +30,13 @@ public class Main extends Application {
     public static final int SCENE_HEIGHT = GRID_SIZE + 200;
     public static final Paint BACKGROUND = Color.WHITE;
 	
-    private String myTitle;
-    private int myFrameRate = 3;
-    private int myMillisecondDelay = 1000 / myFrameRate;
-    private double mySecondDelay = 1.0 / myFrameRate;
+    private static final int FRAME_RATE = 3;
+    private static final int MILLISECOND_DELAY = 1000 / FRAME_RATE;
+    private static final double SECOND_DELAY = 1.0 / FRAME_RATE;
     
     private Stage myStage;
     private Simulation mySimulation;
-    private ArrayList<ArrayList<Cell>> myCells;
+    private List<List<Cell>> myCells;
     private Scene myScene;
     private Group myButtonRoot;
     private Group myGridRoot;
@@ -66,15 +65,15 @@ public class Main extends Application {
 		Simulation simulation = XMLReader.setupSimulation(file);
 		simulation.initialize();
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
-		myTitle = XMLReader.getTitle(file);
+		String title = XMLReader.getTitle(file);
 
 		stage.setScene(myScene);
-        stage.setTitle(myTitle);
+        stage.setTitle(title);
         stage.show();
         myStage = stage;
         // attach "game loop" to timeline to play it
-        KeyFrame frame = new KeyFrame(Duration.millis(myMillisecondDelay),
-                                      e -> step(mySecondDelay));
+        KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
+                                      e -> step(SECOND_DELAY));
         Timeline animation = new Timeline();
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.getKeyFrames().add(frame);
@@ -181,7 +180,7 @@ public class Main extends Application {
 		stop.setLayoutY(500);
 		stop.setOnMouseClicked(e -> {
 			myAnimation.pause();
-			step(mySecondDelay);
+			step(SECOND_DELAY);
 		});
 		return stop;
 	}

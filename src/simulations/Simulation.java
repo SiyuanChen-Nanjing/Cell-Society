@@ -1,19 +1,20 @@
 package simulations;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cells.Cell;
 
 public abstract class Simulation {
 	
 	protected int myNumCells;
-	protected ArrayList<ArrayList<Cell>> myCells;
+	protected List<List<Cell>> myCells;
 	
 	public Simulation(int numCells) {
 		myNumCells = numCells;
 	}
 	
-	public ArrayList<ArrayList<Cell>> getMyCells() {
+	public List<List<Cell>> getMyCells() {
 		return myCells;
 	}
 	

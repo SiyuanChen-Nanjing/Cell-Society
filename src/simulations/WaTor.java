@@ -1,6 +1,7 @@
 package simulations;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cells.Cell;
 import cells.EmptyCell;
@@ -24,7 +25,7 @@ public class WaTor extends Simulation {
 
 	@Override
 	public void evolve() {
-		ArrayList<ArrayList<Cell>> updatedCells = new ArrayList<>(myCells);
+		List<List<Cell>> updatedCells = new ArrayList<>(myCells);
 		for (int i = 1; i < myCells.size()-1;i++) {
 			for (int j = 1; j < myCells.size()-1;j++) {
 				Cell current = myCells.get(i).get(j);
@@ -39,7 +40,7 @@ public class WaTor extends Simulation {
 		myCells = updatedCells;
 	}
 
-	private void fishMove(int i, int j, ArrayList<ArrayList<Cell>> updatedCells) {
+	private void fishMove(int i, int j, List<List<Cell>> updatedCells) {
 		FishCell current = (FishCell) myCells.get(i).get(j);
 		FishCell updated = (FishCell) updatedCells.get(i).get(j);
 		ArrayList<Point> empty = getMyEmptyNeighbors(i,j);
@@ -65,7 +66,7 @@ public class WaTor extends Simulation {
 		}
 	}
 	
-	private void sharkMove(int i, int j, ArrayList<ArrayList<Cell>> updatedCells) {
+	private void sharkMove(int i, int j, List<List<Cell>> updatedCells) {
 		SharkCell current = (SharkCell) myCells.get(i).get(j);
 		SharkCell updated = (SharkCell) updatedCells.get(i).get(j);
 		ArrayList<Point> fish = getMyFishNeighbors(i,j);
@@ -274,9 +275,9 @@ public class WaTor extends Simulation {
 	public void initialize() {
 		int numCells = myNumCells;
 		double cell_size = Main.GRID_SIZE/(double)numCells;
-		ArrayList<ArrayList<Cell>> cells = new ArrayList<>();
+		List<List<Cell>> cells = new ArrayList<>();
 		for (int i = 0; i < numCells+2; i++) {
-			ArrayList<Cell> row = new ArrayList<Cell>();
+			ArrayList<Cell> row = new ArrayList<>();
 			for (int j = 0; j < numCells+2; j++) {
 				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) row.add(new EmptyCell(-1,-1,0,0));
 				else {

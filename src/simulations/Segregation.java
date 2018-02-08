@@ -1,6 +1,7 @@
 package simulations;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cells.BlueCell;
 import cells.Cell;
@@ -24,7 +25,7 @@ public class Segregation extends Simulation {
 	
 	@Override
 	public void evolve() {
-		ArrayList<ArrayList<Cell>> updatedCells = new ArrayList<>(myCells);
+		List<List<Cell>> updatedCells = new ArrayList<>(myCells);
 		for (int i = 1; i < myCells.size()-1;i++) {
 			for (int j = 1; j < myCells.size()-1;j++) {
 				Cell current = myCells.get(i).get(j);
@@ -95,9 +96,9 @@ public class Segregation extends Simulation {
 		int numCells = myNumCells;
 		emptyPoints = new ArrayList<>();
 		double cell_size = Main.GRID_SIZE/(double)numCells;
-		ArrayList<ArrayList<Cell>> cells = new ArrayList<>();
+		List<List<Cell>> cells = new ArrayList<>();
 		for (int i = 0; i < numCells+2; i++) {
-			ArrayList<Cell> row = new ArrayList<Cell>();
+			ArrayList<Cell> row = new ArrayList<>();
 			for (int j = 0; j < numCells+2; j++) {
 				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) {
 					row.add(new EmptyCell(-1,-1,0,0));
