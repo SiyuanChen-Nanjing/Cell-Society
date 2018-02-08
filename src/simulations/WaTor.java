@@ -28,8 +28,12 @@ public class WaTor extends Simulation {
 		for (int i = 1; i < myCells.size()-1;i++) {
 			for (int j = 1; j < myCells.size()-1;j++) {
 				Cell current = myCells.get(i).get(j);
-				if (current.isFish()) fishMove(i,j, updatedCells);
-				else if (current.isShark()) sharkMove(i,j, updatedCells);
+				if (current.isFish()) {
+					fishMove(i,j, updatedCells);
+				}
+				else if (current.isShark()) {
+					sharkMove(i,j, updatedCells);
+				}
 			}
 		}
 		myCells = updatedCells;
@@ -127,47 +131,89 @@ public class WaTor extends Simulation {
 		ArrayList<Cell> neighbors = getFourNeighbors(i,j);
 		if (i==1) {
 			if (j==1) {
-				if (neighbors.get(3).isEmpty()) empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
-				if (neighbors.get(2).isEmpty()) empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
+				if (neighbors.get(3).isEmpty()) {
+					empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
+				}
+				if (neighbors.get(2).isEmpty()) {
+					empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
+				}
 			}
 			else if (j==myCells.size()-2) {
-				if (neighbors.get(1).isEmpty()) empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
-				if (neighbors.get(3).isEmpty()) empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
+				if (neighbors.get(1).isEmpty()) {
+					empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
+				}
+				if (neighbors.get(3).isEmpty()) {
+					empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
+				}
 			}
 			else {
-				if (neighbors.get(3).isEmpty()) empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
-				if (neighbors.get(2).isEmpty()) empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
-				if (neighbors.get(1).isEmpty()) empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
+				if (neighbors.get(3).isEmpty()) {
+					empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
+				}
+				if (neighbors.get(2).isEmpty()) {
+					empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
+				}
+				if (neighbors.get(1).isEmpty()) {
+					empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
+				}
 			}
 		}
 		else if (i==myCells.size()-2) {
 			if (j==1) {
-				if (neighbors.get(0).isEmpty()) empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
-				if (neighbors.get(2).isEmpty()) empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
+				if (neighbors.get(0).isEmpty()) {
+					empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
+				}
+				if (neighbors.get(2).isEmpty()) {
+					empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
+				}
 			}
 			else if (j==myCells.size()-2) {
-				if (neighbors.get(1).isEmpty()) empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
-				if (neighbors.get(0).isEmpty()) empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
+				if (neighbors.get(1).isEmpty()) {
+					empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
+				}
+				if (neighbors.get(0).isEmpty()) {
+					empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
+				}
 			}
 			else {
-				if (neighbors.get(1).isEmpty()) empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
-				if (neighbors.get(2).isEmpty()) empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
-				if (neighbors.get(0).isEmpty()) empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
+				if (neighbors.get(1).isEmpty()) {
+					empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
+				}
+				if (neighbors.get(2).isEmpty()) {
+					empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
+				}
+				if (neighbors.get(0).isEmpty()) {
+					empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
+				}
 			}
 		}
 		else if (j==1) {
-			if (neighbors.get(0).isEmpty()) empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
-			if (neighbors.get(3).isEmpty()) empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
-			if (neighbors.get(2).isEmpty()) empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
+			if (neighbors.get(0).isEmpty()) {
+				empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
+			}
+			if (neighbors.get(3).isEmpty()) {
+				empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
+			}
+			if (neighbors.get(2).isEmpty()) {
+				empty.add(new Point(neighbors.get(2).getMyGridX(),neighbors.get(2).getMyGridY()));
+			}
 		}
 		else if (j==myCells.size()-2) {
-			if (neighbors.get(1).isEmpty()) empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
-			if (neighbors.get(3).isEmpty()) empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
-			if (neighbors.get(0).isEmpty()) empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
+			if (neighbors.get(1).isEmpty()) {
+				empty.add(new Point(neighbors.get(1).getMyGridX(),neighbors.get(1).getMyGridY()));
+			}
+			if (neighbors.get(3).isEmpty()) {
+				empty.add(new Point(neighbors.get(3).getMyGridX(),neighbors.get(3).getMyGridY()));
+			}
+			if (neighbors.get(0).isEmpty()) {
+				empty.add(new Point(neighbors.get(0).getMyGridX(),neighbors.get(0).getMyGridY()));
+			}
 		}
 		else {
 			for (int k = 0; k < 4; k++) {
-				if (neighbors.get(k).isEmpty()) empty.add(new Point(neighbors.get(k).getMyGridX(),neighbors.get(k).getMyGridY()));
+				if (neighbors.get(k).isEmpty()) {
+					empty.add(new Point(neighbors.get(k).getMyGridX(),neighbors.get(k).getMyGridY()));
+				}
 			}
 		}
 		return empty;

@@ -39,7 +39,6 @@ public class Main extends Application {
     private Simulation mySimulation;
     private ArrayList<ArrayList<Cell>> myCells;
     private Scene myScene;
-    private Group myRoot;
     private Group myButtonRoot;
     private Group myGridRoot;
     private Timeline myAnimation;
@@ -101,7 +100,6 @@ public class Main extends Application {
 				gridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 			}
 		}
-		myRoot = root;
 		myButtonRoot = buttonRoot;
 		myGridRoot = gridRoot;
 		
@@ -116,8 +114,11 @@ public class Main extends Application {
 		mySimulation.evolve();
 		myGridRoot.getChildren().clear();
 		myCells = mySimulation.getMyCells();
-		for (int i=1;i<myCells.size()-1;i++) 
-			for (int j = 1; j<myCells.size()-1;j++) myGridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
+		for (int i=1;i<myCells.size()-1;i++) {
+			for (int j = 1; j<myCells.size()-1;j++) {
+				myGridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
+			}
+		}
 	}
 	
 	// load all the UI nodes into the group containing all the buttons

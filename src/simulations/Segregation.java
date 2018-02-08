@@ -29,9 +29,15 @@ public class Segregation extends Simulation {
 			for (int j = 1; j < myCells.size()-1;j++) {
 				Cell current = myCells.get(i).get(j);
 				double satisfaction = 0;
-				if (current.isRed()) satisfaction = countRedInNeighborsPercent(i,j);
-				else if (current.isBlue()) satisfaction = countBlueInNeighborsPercent(i,j);
-				else satisfaction = 100; // eliminate the possibility to move empty cells
+				if (current.isRed()) {
+					satisfaction = countRedInNeighborsPercent(i,j);
+				}
+				else if (current.isBlue()) {
+					satisfaction = countBlueInNeighborsPercent(i,j);
+				}
+				else {
+					satisfaction = 100; // eliminate the possibility to move empty cells
+				}
 				if (satisfaction < myMinSatisfaction) {
 					Point point = emptyPoints.get((int)(Math.random()*(emptyPoints.size()-1)));
 					Cell c = myCells.get(point.getMyRow()).get(point.getMyCol());
@@ -62,7 +68,9 @@ public class Segregation extends Simulation {
 		for (Cell c: getNeighbors(i,j)) {
 			if (!c.isEmpty()) {
 				total++;
-				if (c.isRed()) count++;
+				if (c.isRed()) {
+					count++;
+				}
 			}
 		}
 		return count/total;
@@ -74,7 +82,9 @@ public class Segregation extends Simulation {
 		for (Cell c: getNeighbors(i,j)) {
 			if (!c.isEmpty()) {
 				total++;
-				if (c.isBlue()) count++;
+				if (c.isBlue()) {
+					count++;
+				}
 			}
 		}
 		return count/total;
@@ -89,13 +99,17 @@ public class Segregation extends Simulation {
 		for (int i = 0; i < numCells+2; i++) {
 			ArrayList<Cell> row = new ArrayList<Cell>();
 			for (int j = 0; j < numCells+2; j++) {
-				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) row.add(new EmptyCell(-1,-1,0,0));
+				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) {
+					row.add(new EmptyCell(-1,-1,0,0));
+				}
 				else {
 					double random = Math.random();
-					if (random < myRedPercent) 
+					if (random < myRedPercent) {
 						row.add(new RedCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size));
-					else if (random < myRedPercent + myBluePercent)
+					}
+					else if (random < myRedPercent + myBluePercent) {
 						row.add(new BlueCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size));
+					}
 					else {
 						row.add(new EmptyCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size));
 						emptyPoints.add(new Point(i,j));

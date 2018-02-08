@@ -23,9 +23,14 @@ public abstract class Simulation {
 	
 	public ArrayList<Cell> getNeighbors(int i, int j) {
 		ArrayList<Cell> neighbors = new ArrayList<>();
-		neighbors.add(myCells.get(i-1).get(j-1)); neighbors.add(myCells.get(i-1).get(j)); neighbors.add(myCells.get(i-1).get(j+1));
-		neighbors.add(myCells.get(i).get(j-1)); neighbors.add(myCells.get(i).get(j+1));
-		neighbors.add(myCells.get(i+1).get(j-1)); neighbors.add(myCells.get(i+1).get(j)); neighbors.add(myCells.get(i+1).get(j+1));
+		neighbors.add(myCells.get(i-1).get(j-1)); 
+		neighbors.add(myCells.get(i-1).get(j)); 
+		neighbors.add(myCells.get(i-1).get(j+1));
+		neighbors.add(myCells.get(i).get(j-1)); 
+		neighbors.add(myCells.get(i).get(j+1));
+		neighbors.add(myCells.get(i+1).get(j-1)); 
+		neighbors.add(myCells.get(i+1).get(j)); 
+		neighbors.add(myCells.get(i+1).get(j+1));
 		return neighbors;
 	}
 	

@@ -81,7 +81,9 @@ public class XMLReader {
 			wator.setReproductionRounds(fishReproduce, sharkReproduce);
 			return wator;
 		}
-		else throw new IllegalArgumentException("Your input simulation type is not implemented.");
+		else {
+			throw new IllegalArgumentException("Your input simulation type is not implemented.");
+		}
 	}
 	
 	

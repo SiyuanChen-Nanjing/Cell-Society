@@ -38,13 +38,9 @@ public class Fire extends Simulation{
 								current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
 					}
 				}
-				else if (current.isTree()) {
-					if (hasBurningNeighbor(i,j)) {
-						if (Math.random() < probCatch) {
-							updatedCells.get(i).set(j, new BurningCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
-								current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight()));
-						}
-					}
+				else if (current.isTree() && hasBurningNeighbor(i,j) && Math.random() < probCatch) {
+					updatedCells.get(i).set(j, new BurningCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
+						current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight()));
 				}
 			}
 		}
