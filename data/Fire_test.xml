@@ -2,9 +2,10 @@
 
 <Simulation>
 	<basic>
-		<type>Fire</type>
+		<type>Ants</type>
 		<title>Spread of Fire</title>
 		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+		<initialConfig>RandomByPercentage</initialConfig>
 	</basic>
 	
 	<globalSettings>

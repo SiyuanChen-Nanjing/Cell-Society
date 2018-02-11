@@ -5,6 +5,7 @@
 		<type>Segregation</type>
 		<title>Segregation</title>
 		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+		<initialConfig>RandomByPercentage</initialConfig>
 	</basic>
 	
 	<globalSettings>

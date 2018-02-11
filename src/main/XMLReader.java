@@ -10,6 +10,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javafx.scene.control.Alert;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import simulations.Fire;
 import simulations.GameOfLife;
 import simulations.Segregation;
@@ -44,9 +47,20 @@ public class XMLReader {
 	 * @param file XML configuration file
 	 * @return the Simulation object created using the information in the XML file
 	 */
-	public static Simulation setupSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
+	public static Simulation setupSimulation(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException {
 		Document doc = read(file);
-		String type = doc.getElementsByTagName("type").item(0).getFirstChild().getNodeValue();
+		String type = "";
+		if (doc.getElementsByTagName("type").item(0)!=null) {
+			type = doc.getElementsByTagName("type").item(0).getFirstChild().getNodeValue();
+		}
+		else {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Your file does not contain a simulation type.");
+			alert.showAndWait();
+			FileChooser fc = new FileChooser();
+			File f = fc.showOpenDialog(stage);
+			return setupSimulation(f,stage);
+		}
 		int size = Integer.parseInt(doc.getElementsByTagName("size").item(0).getFirstChild().getNodeValue());
 		if (type.equals("GameOfLife")) {
 			double ratio = Double.parseDouble(doc.getElementsByTagName("aliveDeadRatio").item(0).getFirstChild().getNodeValue());
@@ -86,8 +100,18 @@ public class XMLReader {
 			return wator;
 		}
 		else {
-			throw new IllegalArgumentException("Your input simulation type is not implemented.");
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("The simulator cannot recognize the simulation type you indicated.");
+			alert.showAndWait();
+			FileChooser fc = new FileChooser();
+			File f = fc.showOpenDialog(stage);
+			return setupSimulation(f,stage);
 		}
+	}
+	
+	public static String readInitialConfigMode(File file) throws SAXException, IOException, ParserConfigurationException {
+		Document doc = read(file);
+		return doc.getElementsByTagName("initialConfig").item(0).getFirstChild().getNodeValue();
 	}
 
 }

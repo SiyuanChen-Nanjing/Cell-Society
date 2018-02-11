@@ -5,6 +5,7 @@
 		<type>WaTor</type>
 		<title>Predator and Prey</title>
 		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+		<initialConfig>ReadIn</initialConfig>
 	</basic>
 	
 	<globalSettings>

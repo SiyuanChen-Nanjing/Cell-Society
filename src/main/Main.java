@@ -27,9 +27,12 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -69,18 +72,28 @@ public class Main extends Application {
     private Button mySlowerButton;
     private Button myRestartButton;
     private Button myRecordButton;
-
+    private Slider mySizeSlider;
+    private Text mySizeText;
 
 	@Override
 	/**
 	 * Initialize animation by reading the XML file and create a scene according to information stored in the 
 	 * file
 	 */
-	public void start(Stage stage) throws SAXException, IOException, ParserConfigurationException {
+	public void start(Stage stage) throws Exception {
 		FileChooser fc = new FileChooser();
 		File file = fc.showOpenDialog(stage);
 		myCurrentFile = file;
-		Simulation simulation = XMLReader.setupSimulation(file);
+		Simulation simulation = XMLReader.setupSimulation(file, stage);
+		mySimulation = simulation;
+		
+		/**
+		if (XMLReader.readInitialConfigMode(file).equals("ReadIn")) {
+			File config = fc.showOpenDialog(stage);
+			mySimulation.readConfiguration(config);
+		}
+		**/
+		
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		String title = XMLReader.getTitle(file);
 		
@@ -113,7 +126,6 @@ public class Main extends Application {
 		Scene scene = new Scene(root, width, height, BACKGROUND);
 
 		myCells = simulation.getMyCells();
-		mySimulation = simulation;
 		for (int i=1;i<myCells.size()-1;i++) {
 			for (int j = 1; j<myCells.size()-1;j++) {
 				gridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
@@ -158,6 +170,10 @@ public class Main extends Application {
 		myButtonRoot.getChildren().add(mySlowerButton);
 		myButtonRoot.getChildren().add(myRestartButton);
 		myButtonRoot.getChildren().add(myRecordButton);
+		
+		myButtonRoot.getChildren().add(mySizeSlider);
+		
+		myButtonRoot.getChildren().add(mySizeText);
 	}
 	
 	private void setupUI(String filename) {
@@ -171,6 +187,17 @@ public class Main extends Application {
 		mySlowerButton = createSlowerButton(rb.getString("SlowerKey"));
 		myRestartButton = createRestartButton(rb.getString("RestartKey"));
 		myRecordButton = createRecordButton(rb.getString("RecordKey"));
+		
+		mySizeText = new Text("Size: " + mySimulation.getMyNumCells() + "*" + mySimulation.getMyNumCells());
+		mySizeText.setLayoutX(550);
+		mySizeText.setLayoutY(320);
+		mySizeSlider = mySimulation.sizeBar(mySizeText);
+		mySizeSlider.valueProperty().addListener((observable, oldvalue, newvalue) ->
+        {
+        		myStepCount = 0;
+        		myButtonRoot.getChildren().remove(myChart);
+        		setChart();
+        });
 	}
 	
 	private Button createStartButton(String txt) {
@@ -226,7 +253,13 @@ public class Main extends Application {
 			try {
 				changeSimulation(file);
 			} catch (SAXException | IOException | ParserConfigurationException e1) {
-				throw new IllegalArgumentException(XML_ERROR_MSG);
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("Cannot simulate from file chosen.");
+				alert.show();
+			} catch (IllegalArgumentException e2) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("You much choose a file to load.");
+				alert.show();
 			}
 		});
 		return load;
@@ -241,8 +274,10 @@ public class Main extends Application {
 				changeSimulation(myCurrentFile);
 				myAnimation.pause();
 			} catch (SAXException | IOException | ParserConfigurationException e1) {
-				throw new IllegalArgumentException(XML_ERROR_MSG);
-			}
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("Cannot simulate from file chosen.");
+				alert.show();
+			} 
 		});
 		return restart;
 	}
@@ -276,7 +311,13 @@ public class Main extends Application {
 			try {
 				writeConfig(file, mySimulation.getMyCells());
 			} catch (ParserConfigurationException | TransformerException e1) {
-				throw new IllegalArgumentException("Cannot write the current configuration into indicated file");
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("Cannot save configuration into file indicated.");
+				alert.show();
+			} catch (IllegalArgumentException e2) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("You much choose a file to save.");
+				alert.show();
 			}
 		});
 		return record;
@@ -352,8 +393,9 @@ public class Main extends Application {
 	}
 	
 	private void changeSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
-		Simulation simulation = XMLReader.setupSimulation(file);
+		Simulation simulation = XMLReader.setupSimulation(file, myStage);
 		simulation.initialize();
+		mySimulation = simulation;
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		myStage.setScene(myScene);
 		myCurrentFile = file;
