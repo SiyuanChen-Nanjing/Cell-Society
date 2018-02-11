@@ -52,12 +52,14 @@ public class XMLReader {
 			double ratio = Double.parseDouble(doc.getElementsByTagName("aliveDeadRatio").item(0).getFirstChild().getNodeValue());
 			GameOfLife gol = new GameOfLife(size);
 			gol.setRatio(ratio);
+			gol.initialize();
 			return gol;
 		}
 		else if (type.equals("Fire")) {
 			double probCatch = Double.parseDouble(doc.getElementsByTagName("probCatch").item(0).getFirstChild().getNodeValue());
 			Fire fire = new Fire(size);
 			fire.setProbCatch(probCatch);
+			fire.initialize();
 			return fire;
 		}
 		else if (type.equals("Segregation")) {
@@ -68,6 +70,7 @@ public class XMLReader {
 			seg.setEmptyPercent(emptyPercent);
 			seg.setRatio(ratio);
 			seg.setMyMinSatisfaction(satisfaction);
+			seg.initialize();
 			return seg;
 		}
 		else if (type.equals("WaTor")) {
@@ -79,6 +82,7 @@ public class XMLReader {
 			wator.setEmptyPercent(emptyPercent);
 			wator.setRatio(ratio);
 			wator.setReproductionRounds(fishReproduce, sharkReproduce);
+			wator.initialize();
 			return wator;
 		}
 		else {
@@ -86,5 +90,5 @@ public class XMLReader {
 		}
 	}
 	
-	
+	//public static List<List<Cell>> readGrid();
 }

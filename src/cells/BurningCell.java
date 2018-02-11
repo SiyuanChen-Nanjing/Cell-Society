@@ -5,9 +5,10 @@ import javafx.scene.paint.Color;
 public class BurningCell extends Cell {
 	private int myBurningTime = 2;
 	
-	public BurningCell(double x_pos, double y_pos, double width, double height) {
-		super(x_pos, y_pos, width, height);
+	public BurningCell(double x_pos, double y_pos, double width, double height, int i, int j) {
+		super(x_pos, y_pos, width, height,i,j);
 		isBurning = true;
+		myType = "Burning";
 		myRectangle.setFill(Color.FIREBRICK);
 	}
 	

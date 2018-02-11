@@ -9,6 +9,7 @@ public class FishCell extends Cell {
 	public FishCell(double x_pos, double y_pos, double width, double height, int i, int j) {
 		super(x_pos, y_pos, width, height, i,j);
 		isFish = true;
+		myType = "Fish";
 		myRectangle.setFill(Color.CHARTREUSE);
 	}
 	
