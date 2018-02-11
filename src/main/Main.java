@@ -5,8 +5,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import cells.Cell;
@@ -52,6 +61,7 @@ public class Main extends Application {
     private Button myFasterButton;
     private Button mySlowerButton;
     private Button myRestartButton;
+    private Button myRecordButton;
 
 
 	@Override
@@ -64,7 +74,6 @@ public class Main extends Application {
 		File file = fc.showOpenDialog(stage);
 		myCurrentFile = file;
 		Simulation simulation = XMLReader.setupSimulation(file);
-		simulation.initialize();
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		String title = XMLReader.getTitle(file);
 
@@ -131,6 +140,7 @@ public class Main extends Application {
 		myButtonRoot.getChildren().add(myFasterButton);
 		myButtonRoot.getChildren().add(mySlowerButton);
 		myButtonRoot.getChildren().add(myRestartButton);
+		myButtonRoot.getChildren().add(myRecordButton);
 	}
 	
 	private void setupUI(String filename) {
@@ -143,6 +153,7 @@ public class Main extends Application {
 		myFasterButton = createFasterButton(rb.getString("FasterKey"));
 		mySlowerButton = createSlowerButton(rb.getString("SlowerKey"));
 		myRestartButton = createRestartButton(rb.getString("RestartKey"));
+		myRecordButton = createRecordButton(rb.getString("RecordKey"));
 	}
 	
 	private Button createStartButton(String txt) {
@@ -237,6 +248,63 @@ public class Main extends Application {
 			myAnimation.setRate(myAnimation.getRate()*0.5);
 		});
 		return slower;
+	}
+	
+	private Button createRecordButton(String txt) {
+		Button record = new Button(txt);
+		record.setLayoutX(270);
+		record.setLayoutY(550);
+		record.setOnMouseClicked(e -> {
+			File file = new FileChooser().showSaveDialog(myStage);
+			try {
+				writeConfig(file, mySimulation.getMyCells());
+			} catch (ParserConfigurationException | TransformerException e1) {
+				throw new IllegalArgumentException("Cannot write the current configuration into indicated file");
+			}
+		});
+		return record;
+	}
+	
+	private static void writeConfig(File file, List<List<Cell>> cells) throws ParserConfigurationException, TransformerException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = factory.newDocumentBuilder();
+		Document doc = db.newDocument();
+		Element root = doc.createElement("Configuration");
+		doc.appendChild(root);
+		
+		for (List<Cell> column: cells) {
+			for (Cell c: column) {
+				Element cell = doc.createElement("Cell");
+				root.appendChild(cell);
+				
+				Element name = doc.createElement("Type");
+				name.appendChild(doc.createTextNode(c.getType()));
+				cell.appendChild(name);
+				
+				Element xpos = doc.createElement("XPos");
+				xpos.appendChild(doc.createTextNode(c.getMyRectangle().getX() + ""));
+				cell.appendChild(xpos);
+				
+				Element ypos = doc.createElement("YPos");
+				ypos.appendChild(doc.createTextNode(c.getMyRectangle().getY() + ""));
+				cell.appendChild(ypos);
+				
+				Element row = doc.createElement("Row");
+				row.appendChild(doc.createTextNode(c.getMyGridX() + ""));
+				cell.appendChild(row);
+				
+				Element col = doc.createElement("Column");
+				col.appendChild(doc.createTextNode(c.getMyGridY() + ""));
+				cell.appendChild(col);
+			}
+		}
+		
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(file);
+		
+		transformer.transform(source, result);
 	}
 	
 	private void changeSimulation(File file) throws SAXException, IOException, ParserConfigurationException {

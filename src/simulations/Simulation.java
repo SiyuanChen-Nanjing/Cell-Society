@@ -1,6 +1,7 @@
 package simulations;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cells.Cell;
@@ -15,7 +16,7 @@ public abstract class Simulation {
 	}
 	
 	public List<List<Cell>> getMyCells() {
-		return myCells;
+		return Collections.unmodifiableList(myCells);
 	}
 	
 	public abstract void evolve();

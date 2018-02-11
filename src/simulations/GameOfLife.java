@@ -43,12 +43,12 @@ public class GameOfLife extends Simulation {
 				if (current.isAlive()) {
 					if (numAlive<2 || numAlive>3) {
 						updatedCells.get(i).set(j, new DeadCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
-								current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight()));
+								current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
 					}
 				}
 				else if (current.isDead() && numAlive==3) {
 					updatedCells.get(i).set(j, new AliveCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
-							current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight()));
+							current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
 				}
 			}
 		}
@@ -64,15 +64,15 @@ public class GameOfLife extends Simulation {
 			ArrayList<Cell> row = new ArrayList<>();
 			for (int j = 0; j < numCells+2; j++) {
 				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) {
-					row.add(new EmptyCell(-1,-1,0,0));
+					row.add(new EmptyCell(-1,-1,0,0,i,j));
 				}
 				else {
 					double random = Math.random();
 					if (random < myAlivePercent) {
-						row.add(new AliveCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size));
+						row.add(new AliveCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size,i,j));
 					}
 					else {
-						row.add(new DeadCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size));
+						row.add(new DeadCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size,i,j));
 					}
 				}
 			}

@@ -41,7 +41,7 @@ public class Fire extends Simulation{
 				}
 				else if (current.isTree() && hasBurningNeighbor(i,j) && Math.random() < probCatch) {
 					updatedCells.get(i).set(j, new BurningCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
-						current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight()));
+						current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
 				}
 			}
 		}
@@ -59,13 +59,13 @@ public class Fire extends Simulation{
 			ArrayList<Cell> row = new ArrayList<>();
 			for (int j = 0; j < numCells+2; j++) {
 				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) {
-					row.add(new EmptyCell(-1, -1, 0, 0));
+					row.add(new EmptyCell(-1, -1, 0, 0,i,j));
 				}
 				else if (i == numCells/2 && j == numCells/2-1 ){
-					row.add(new BurningCell((i-1)*cell_size, (j-1)*cell_size, cell_size, cell_size));
+					row.add(new BurningCell((i-1)*cell_size, (j-1)*cell_size, cell_size, cell_size,i,j));
 				}
 				else {
-					row.add(new TreeCell((i-1)*cell_size, (j-1)*cell_size, cell_size, cell_size));
+					row.add(new TreeCell((i-1)*cell_size, (j-1)*cell_size, cell_size, cell_size,i,j));
 				}
 			}
 			cells.add(row);

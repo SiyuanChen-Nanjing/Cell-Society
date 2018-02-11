@@ -20,13 +20,10 @@ public abstract class Cell {
 	protected boolean isAlive = false;
 	protected boolean isDead = false;
 	
+	protected String myType;
+	
 	private int myGridX;
 	private int myGridY;
-
-	public Cell(double x_pos, double y_pos, double width, double height) {
-		myRectangle = new Rectangle(x_pos, y_pos, width, height);
-		myRectangle.setStroke(Color.BLACK);
-	}
 	
 	public Cell(double x_pos, double y_pos, double width, double height, int i, int j) {
 		myRectangle = new Rectangle(x_pos, y_pos, width, height);
@@ -81,5 +78,9 @@ public abstract class Cell {
 	
 	public boolean isTree() {
 		return isTree;
+	}
+	
+	public String getType() {
+		return myType;
 	}
 }

@@ -279,7 +279,7 @@ public class WaTor extends Simulation {
 		for (int i = 0; i < numCells+2; i++) {
 			ArrayList<Cell> row = new ArrayList<>();
 			for (int j = 0; j < numCells+2; j++) {
-				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) row.add(new EmptyCell(-1,-1,0,0));
+				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) row.add(new EmptyCell(-1,-1,0,0,i,j));
 				else {
 					double random = Math.random();
 					if (random < myFishPercent) 

@@ -44,13 +44,13 @@ public class Segregation extends Simulation {
 					Cell c = myCells.get(point.getMyRow()).get(point.getMyCol());
 					if (current.isBlue()) {
 						updatedCells.get(point.getMyRow()).set(point.getMyCol(), 
-								new BlueCell(c.getMyRectangle().getX(),c.getMyRectangle().getY(),c.getMyRectangle().getWidth(),c.getMyRectangle().getHeight()));
+								new BlueCell(c.getMyRectangle().getX(),c.getMyRectangle().getY(),c.getMyRectangle().getWidth(),c.getMyRectangle().getHeight(),i,j));
 					}
 					else if (current.isRed()) {
 						updatedCells.get(point.getMyRow()).set(point.getMyCol(), 
-								new RedCell(c.getMyRectangle().getX(),c.getMyRectangle().getY(),c.getMyRectangle().getWidth(),c.getMyRectangle().getHeight()));
+								new RedCell(c.getMyRectangle().getX(),c.getMyRectangle().getY(),c.getMyRectangle().getWidth(),c.getMyRectangle().getHeight(),i,j));
 					}
-					updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight()));
+					updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
 					emptyPoints.remove(point);
 					emptyPoints.add(new Point(i,j));
 				}
@@ -101,18 +101,18 @@ public class Segregation extends Simulation {
 			ArrayList<Cell> row = new ArrayList<>();
 			for (int j = 0; j < numCells+2; j++) {
 				if (i==0 || i==numCells+1 || j==0 || j==numCells+1) {
-					row.add(new EmptyCell(-1,-1,0,0));
+					row.add(new EmptyCell(-1,-1,0,0,i,j));
 				}
 				else {
 					double random = Math.random();
 					if (random < myRedPercent) {
-						row.add(new RedCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size));
+						row.add(new RedCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size,i,j));
 					}
 					else if (random < myRedPercent + myBluePercent) {
-						row.add(new BlueCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size));
+						row.add(new BlueCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size,i,j));
 					}
 					else {
-						row.add(new EmptyCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size));
+						row.add(new EmptyCell((i-1)*cell_size,(j-1)*cell_size,cell_size,cell_size,i,j));
 						emptyPoints.add(new Point(i,j));
 					}
 				}
