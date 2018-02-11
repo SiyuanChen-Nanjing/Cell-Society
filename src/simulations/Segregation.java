@@ -21,6 +21,8 @@ public class Segregation extends Simulation {
 
 	public Segregation(int numCells) {
 		super(numCells);
+		myCellType1 = "Red";
+		myCellType2 = "Blue";
 	}
 	
 	@Override
@@ -91,6 +93,15 @@ public class Segregation extends Simulation {
 		return count/total;
 	}
 	
+	protected void setCount() {
+		for (List<Cell> col:myCells) {
+			for (Cell c: col) {
+				if (c.isBlue()) myCellCount2++;
+				else if (c.isRed()) myCellCount1++;
+			}
+		}
+	}
+	
 	@Override
 	public void initialize() {
 		int numCells = myNumCells;
@@ -120,6 +131,7 @@ public class Segregation extends Simulation {
 			cells.add(row);
 		}
 		myCells = cells;
+		setCount();
 	}
 	
 	public void setEmptyPercent(double empty) {

@@ -14,6 +14,8 @@ public class Fire extends Simulation{
 
 	public Fire(int numCells) {
 		super(numCells);
+		myCellType1 = "Tree";
+		myCellType2 = "Fire";
 	}
 
 	public boolean hasBurningNeighbor (int i, int j) {
@@ -37,17 +39,28 @@ public class Fire extends Simulation{
 					if (fire.getBurnTimer()<=0) {
 						updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
 								current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
+						myCellCount1--;
 					}
 				}
 				else if (current.isTree() && hasBurningNeighbor(i,j) && Math.random() < probCatch) {
 					updatedCells.get(i).set(j, new BurningCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
 						current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
+					myCellCount1--;
+					myCellCount2++;
 				}
 			}
 		}
 		myCells = updatedCells;
 	}
 
+	protected void setCount() {
+		for (List<Cell> col:myCells) {
+			for (Cell c: col) {
+				if (c.isBurning()) myCellCount2++;
+				else if (c.isTree()) myCellCount1++;
+			}
+		}
+	}
 
 	@Override
 	public void initialize() {
@@ -71,6 +84,7 @@ public class Fire extends Simulation{
 			cells.add(row);
 		}
 		myCells = cells;
+		setCount();
 	}
 
 	public void setProbCatch(double prob) {

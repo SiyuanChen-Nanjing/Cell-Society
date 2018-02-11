@@ -21,6 +21,8 @@ public class WaTor extends Simulation {
 	
 	public WaTor(int numCells) {
 		super(numCells);
+		myCellType1 = "Fish";
+		myCellType2 = "Shark";
 	}
 
 	@Override
@@ -57,6 +59,7 @@ public class WaTor extends Simulation {
 				updatedCells.get(i).set(j, new FishCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 						current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 				moved.setMyRoundsSurvived(0);
+				myCellCount1++;
 			}
 			else {
 				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
@@ -81,6 +84,7 @@ public class WaTor extends Simulation {
 			Cell fishDestination = myCells.get(fishPoint.getMyRow()).get(fishPoint.getMyCol());
 			SharkCell fishMoved = new SharkCell(fishDestination.getMyRectangle().getX(), fishDestination.getMyRectangle().getY(), 
 					fishDestination.getMyRectangle().getWidth(), fishDestination.getMyRectangle().getHeight(), fishPoint.getMyRow(), fishPoint.getMyCol());
+			myCellCount1--;
 			fishMoved.setMyRoundsSurvived(current.getMyRoundsSurvived());
 			fishMoved.setMyEnergy(current.getMyEnergy()+current.getFishEnergyGain());
 			
@@ -88,6 +92,7 @@ public class WaTor extends Simulation {
 				updatedCells.get(i).set(j, new SharkCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 						current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 				fishMoved.setMyRoundsSurvived(0);
+				myCellCount2++;
 			}
 			else {
 				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
@@ -99,6 +104,7 @@ public class WaTor extends Simulation {
 			if (current.getMyEnergy()<=0) {
 				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
+				myCellCount2--;
 			}
 			else {
 				Point point = empty.get((int)(Math.random()*(empty.size()-1)));
@@ -111,6 +117,7 @@ public class WaTor extends Simulation {
 					updatedCells.get(i).set(j, new SharkCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 					moved.setMyRoundsSurvived(0);
+					myCellCount2++;
 				}
 				else {
 					updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
@@ -123,6 +130,7 @@ public class WaTor extends Simulation {
 			if (current.getMyEnergy()<=0) {
 				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
+				myCellCount2--;
 			}
 		}
 	}
@@ -294,6 +302,7 @@ public class WaTor extends Simulation {
 			cells.add(row);
 		}
 		myCells = cells;
+		setCount();
 	}
 	
 	public void setEmptyPercent(double empty) { myEmptyPercent = empty;}
@@ -303,5 +312,15 @@ public class WaTor extends Simulation {
 	public void setReproductionRounds(int fish, int shark) {
 		myFishRoundsToReproduce = fish;
 		mySharkRoundsToReproduce = shark;
+	}
+
+	@Override
+	protected void setCount() {
+		for (List<Cell> col:myCells) {
+			for (Cell c: col) {
+				if (c.isShark()) myCellCount2++;
+				else if (c.isFish()) myCellCount1++;
+			}
+		}
 	}
 }

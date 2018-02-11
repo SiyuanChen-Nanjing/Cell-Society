@@ -16,6 +16,8 @@ public class GameOfLife extends Simulation {
 	
 	public GameOfLife(int numCells) {
 		super(numCells);
+		myCellType1 = "Alive";
+		myCellType2 = "Dead";
 	}
 
 	private int countAliveNeighbors(int i, int j) {
@@ -44,15 +46,28 @@ public class GameOfLife extends Simulation {
 					if (numAlive<2 || numAlive>3) {
 						updatedCells.get(i).set(j, new DeadCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
 								current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
+						myCellCount1--;
+						myCellCount2++;
 					}
 				}
 				else if (current.isDead() && numAlive==3) {
 					updatedCells.get(i).set(j, new AliveCell(current.getMyRectangle().getX(),current.getMyRectangle().getY(),
 							current.getMyRectangle().getWidth(),current.getMyRectangle().getHeight(),i,j));
+					myCellCount1++;
+					myCellCount2--;
 				}
 			}
 		}
 		myCells = updatedCells;
+	}
+	
+	protected void setCount() {
+		for (List<Cell> col:myCells) {
+			for (Cell c: col) {
+				if (c.isDead()) myCellCount2++;
+				else if (c.isAlive()) myCellCount1++;
+			}
+		}
 	}
 
 	@Override
@@ -79,6 +94,7 @@ public class GameOfLife extends Simulation {
 			cells.add(row);
 		}
 		myCells = cells;
+		setCount();
 	}
 
 }

@@ -24,6 +24,9 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -35,7 +38,7 @@ import simulations.Simulation;
 public class Main extends Application {
 
 	public static final int GRID_SIZE = 400;
-    public static final int SCENE_WIDTH = GRID_SIZE;
+    public static final int SCENE_WIDTH = GRID_SIZE + 400;
     public static final int SCENE_HEIGHT = GRID_SIZE + 200;
     public static final Paint BACKGROUND = Color.WHITE;
 	
@@ -52,6 +55,10 @@ public class Main extends Application {
     private Group myGridRoot;
     private Timeline myAnimation;
     private File myCurrentFile;
+    private LineChart<Number, Number> myChart;
+    private XYChart.Series<Number, Number> myDataSeries1;
+    private XYChart.Series<Number, Number> myDataSeries2;
+    private int myStepCount;
     
     private Button myStartButton;
     private Button myPauseButton;
@@ -76,7 +83,10 @@ public class Main extends Application {
 		Simulation simulation = XMLReader.setupSimulation(file);
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		String title = XMLReader.getTitle(file);
-
+		
+		myStepCount = 0;
+		setChart();
+		
 		stage.setScene(myScene);
         stage.setTitle(title);
         stage.show();
@@ -128,6 +138,13 @@ public class Main extends Application {
 				myGridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 			}
 		}
+		myStepCount++;
+		updateChart();
+	}
+	
+	private void updateChart() {
+		myDataSeries1.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount1()));
+		myDataSeries2.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount2()));
 	}
 	
 	// load all the UI nodes into the group containing all the buttons
@@ -307,12 +324,41 @@ public class Main extends Application {
 		transformer.transform(source, result);
 	}
 	
+	private void setChart() {
+		NumberAxis time = new NumberAxis();
+		time.setLabel("Step");
+		NumberAxis count = new NumberAxis();
+		count.setLabel("Count");
+		myChart = new LineChart<Number, Number>(time, count);
+		myChart.setLayoutX(410);
+		myChart.setLayoutY(10);
+		myChart.setPrefHeight(300);
+		myChart.setPrefWidth(350);
+		
+		myDataSeries1 = new XYChart.Series<Number, Number>();
+		myDataSeries1.setName(mySimulation.getMyCellType1());
+		myDataSeries1.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount1()));
+		
+		myDataSeries2 = new XYChart.Series<Number, Number>();
+		myDataSeries2.setName(mySimulation.getMyCellType2());
+		myDataSeries2.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount2()));
+		
+		myChart.getData().add(myDataSeries1);
+		myChart.getData().add(myDataSeries2);
+		
+		myChart.setLegendVisible(true);
+	
+		myButtonRoot.getChildren().add(myChart);
+	}
+	
 	private void changeSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
 		Simulation simulation = XMLReader.setupSimulation(file);
 		simulation.initialize();
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		myStage.setScene(myScene);
 		myCurrentFile = file;
+		myStepCount = 0;
+		setChart();
 	}
 	
 	/**

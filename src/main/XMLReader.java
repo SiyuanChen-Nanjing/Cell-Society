@@ -89,6 +89,5 @@ public class XMLReader {
 			throw new IllegalArgumentException("Your input simulation type is not implemented.");
 		}
 	}
-	
-	//public static List<List<Cell>> readGrid();
+
 }
