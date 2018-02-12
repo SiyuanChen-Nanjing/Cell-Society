@@ -222,6 +222,9 @@ public class Main extends Application {
 			myParaText.setText("Shark rounds to reproduce: " + wator.getMySharkRoundsToReproduce());
 			myParaSlider = wator.parameter1Slider(myParaText);
 		}
+		else {
+			myParaSlider = new Slider();
+		}
 	}
 	
 	private Button createStartButton(String txt) {
