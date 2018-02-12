@@ -16,6 +16,8 @@ import cells.EmptyCell;
 import cells.BurningCell;
 import cells.TreeCell;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Slider;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
@@ -131,6 +133,26 @@ public class Fire extends Simulation{
 		}
 		myCells = cells;
 		setCount();
+	}
+
+	@Override
+	public Slider parameter1Slider(Text text) {
+		Slider prob = new Slider(0,1,probCatch);
+		prob.valueProperty().addListener((observable, oldvalue, newvalue) ->
+        {
+            probCatch = (int)(newvalue.doubleValue()*1000)/1000.0;
+            text.setText("Probability to catch fire: " + probCatch);
+        } );
+		prob.setLayoutX(410);
+		prob.setLayoutY(370);
+		return prob;
+	}
+
+	/**
+	 * @return probCatch
+	 */
+	public double getProbCatch() {
+		return probCatch;
 	}
 	
 }

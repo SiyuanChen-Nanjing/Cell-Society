@@ -13,7 +13,7 @@
 	
 	<initialization>
 		<size>30</size>
-		<aliveDeadRatio>100</aliveDeadRatio>
+		<aliveDeadRatio>10</aliveDeadRatio>
 	</initialization>
     
 </Simulation>

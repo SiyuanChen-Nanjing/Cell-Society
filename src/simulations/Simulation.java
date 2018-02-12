@@ -25,14 +25,6 @@ public abstract class Simulation {
 	
 	protected int myCellCount1;
 	protected int myCellCount2;
-	
-	public String getMyCellType1() {
-		return myCellType1;
-	}
-
-	public String getMyCellType2() {
-		return myCellType2;
-	}
 
 	public Simulation(int numCells) {
 		myNumCells = numCells;
@@ -90,14 +82,23 @@ public abstract class Simulation {
         } );
 		size.setLayoutX(410);
 		size.setLayoutY(310);
-		size.setMinorTickCount(1);
 		return size;
 	}
 	
 	public abstract void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException;
 	
+	public abstract Slider parameter1Slider(Text text);
+	
 	public int getMyNumCells() {
 		return myNumCells;
 	}
 
+	public String getMyCellType1() {
+		return myCellType1;
+	}
+
+	public String getMyCellType2() {
+		return myCellType2;
+	}
+	
 }

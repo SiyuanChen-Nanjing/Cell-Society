@@ -11,13 +11,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import cells.AliveCell;
 import cells.BlueCell;
 import cells.Cell;
-import cells.DeadCell;
 import cells.EmptyCell;
 import cells.RedCell;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Slider;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
@@ -184,5 +184,22 @@ public class Segregation extends Simulation {
 		}
 		myCells = cells;
 		setCount();
+	}
+	
+	@Override
+	public Slider parameter1Slider(Text text) {
+		Slider satisfaction = new Slider(0,1,myMinSatisfaction);
+		satisfaction.valueProperty().addListener((observable, oldvalue, newvalue) ->
+        {
+            myMinSatisfaction = (int)(newvalue.doubleValue()*1000)/1000.0;
+            text.setText("Minimum satisfaction: " + myMinSatisfaction);
+        } );
+		satisfaction.setLayoutX(410);
+		satisfaction.setLayoutY(370);
+		return satisfaction;
+	}
+
+	public double getMyMinSatisfaction() {
+		return myMinSatisfaction;
 	}
 }

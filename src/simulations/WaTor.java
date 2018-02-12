@@ -11,13 +11,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import cells.AliveCell;
 import cells.Cell;
-import cells.DeadCell;
 import cells.EmptyCell;
 import cells.FishCell;
 import cells.SharkCell;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Slider;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
@@ -31,7 +31,7 @@ public class WaTor extends Simulation {
 	private double mySharkPercent = 1-myEmptyPercent-myFishPercent;
 	
 	private int myFishRoundsToReproduce = 4;
-	private int mySharkRoundsToReproduce = 10;
+	private int mySharkRoundsToReproduce = 2* myFishRoundsToReproduce;
 	
 	public WaTor(int numCells) {
 		super(numCells);
@@ -366,5 +366,25 @@ public class WaTor extends Simulation {
 		}
 		myCells = cells;
 		setCount();
+	}
+	
+	@Override
+	public Slider parameter1Slider(Text text) {
+		Slider sharkReproduce = new Slider(2,100,this.mySharkRoundsToReproduce);
+		sharkReproduce.valueProperty().addListener((observable, oldvalue, newvalue) ->
+        {
+            this.mySharkRoundsToReproduce = newvalue.intValue();
+            text.setText("Shark rounds to reproduce: " + this.mySharkRoundsToReproduce);
+        } );
+		sharkReproduce.setLayoutX(410);
+		sharkReproduce.setLayoutY(370);
+		return sharkReproduce;
+	}
+
+	/**
+	 * @return the mySharkRoundsToReproduce
+	 */
+	public int getMySharkRoundsToReproduce() {
+		return mySharkRoundsToReproduce;
 	}
 }

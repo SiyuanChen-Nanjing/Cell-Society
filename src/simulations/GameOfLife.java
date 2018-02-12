@@ -16,6 +16,8 @@ import cells.Cell;
 import cells.DeadCell;
 import cells.EmptyCell;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Slider;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Main;
@@ -137,6 +139,11 @@ public class GameOfLife extends Simulation {
 		}
 		myCells = cells;
 		setCount();
+	}
+
+	@Override
+	public Slider parameter1Slider(Text text) {
+		return null;
 	}
 	
 }

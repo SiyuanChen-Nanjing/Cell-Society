@@ -36,7 +36,11 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import simulations.Fire;
+import simulations.GameOfLife;
+import simulations.Segregation;
 import simulations.Simulation;
+import simulations.WaTor;
 
 public class Main extends Application {
 
@@ -74,6 +78,8 @@ public class Main extends Application {
     private Button myRecordButton;
     private Slider mySizeSlider;
     private Text mySizeText;
+    private Slider myParaSlider;
+    private Text myParaText;
 
 	@Override
 	/**
@@ -170,8 +176,10 @@ public class Main extends Application {
 		myButtonRoot.getChildren().add(myRecordButton);
 		
 		myButtonRoot.getChildren().add(mySizeSlider);
-		
 		myButtonRoot.getChildren().add(mySizeText);
+		
+		myButtonRoot.getChildren().add(myParaSlider);
+		myButtonRoot.getChildren().add(myParaText);
 	}
 	
 	private void setupUI(String filename) {
@@ -196,6 +204,25 @@ public class Main extends Application {
         		myButtonRoot.getChildren().remove(myChart);
         		setChart();
         });
+		
+		myParaText = new Text();
+		myParaText.setLayoutX(550);
+		myParaText.setLayoutY(370);
+		if (mySimulation.getMyCellType1().equals("Red")) {
+			Segregation seg = (Segregation)mySimulation;
+			myParaText.setText("Minimum satisfaction: " + seg.getMyMinSatisfaction());
+			myParaSlider = seg.parameter1Slider(myParaText);
+		}
+		else if (mySimulation.getMyCellType1().equals("Tree")) {
+			Fire fire = (Fire)mySimulation;
+			myParaText.setText("Probability to catch fire: " + fire.getProbCatch());
+			myParaSlider = fire.parameter1Slider(myParaText);
+		}
+		else if (mySimulation.getMyCellType1().equals("Fish")) {
+			WaTor wator = (WaTor)mySimulation;
+			myParaText.setText("Shark rounds to reproduce: " + wator.getMySharkRoundsToReproduce());
+			myParaSlider = wator.parameter1Slider(myParaText);
+		}
 	}
 	
 	private Button createStartButton(String txt) {
