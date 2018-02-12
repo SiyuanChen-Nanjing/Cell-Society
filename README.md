@@ -10,6 +10,8 @@ by Siyuan Chen, Jamie Kim and Ryan Suggs
 		* Sprint 3: implemented graph and dynamic slider UIs, implemented feature: write current grid to XML, read grid configuration from XML, error checking
 	* **Jamie:** 
 	* **Ryan:** 
+	    * Sprint 2: Helped with XML reader and UI.
+	    * Sprint 3: Worked on Grid Edge Types (e.g. Toroidal) and UI components.
 * Sources: Java API
 * File used to start the file: /src/main/Main.java
 * Error Checking
