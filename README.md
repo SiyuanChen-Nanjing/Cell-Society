@@ -8,7 +8,9 @@ by Siyuan Chen, Jamie Kim and Ryan Suggs
 	* Siyuan: 
 		* Sprint 2: implemented Simulation and Cell superclasses, implemented four basic simulations, implemented XML reader and UI
 		* Sprint 3: implemented graph and dynamic slider UIs, implemented feature: write current grid to XML, read grid configuration from XML, error checking
-	* **Jamie:** 
+	* Jamie:
+	    * Spring 2: implemented the UI and fire simulation
+	    * Sprint 3: worked on grid types, edges, and a foraging ant simulation
 	* Ryan: 
 	    * Sprint 2: Helped with XML reader and UI.
 	    * Sprint 3: Worked on Grid Edge Types (e.g. Toroidal) and UI components.
