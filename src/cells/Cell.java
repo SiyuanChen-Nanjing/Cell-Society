@@ -25,6 +25,9 @@ public abstract class Cell {
 	protected boolean isAlive = false;
 	protected boolean isDead = false;
 	
+	protected boolean isAnt = false;
+	protected boolean isForaging = false;
+	
 	private int myGridX;
 	private int myGridY;
 
@@ -32,13 +35,14 @@ public abstract class Cell {
 	protected Polygon myShape;
 	
 	
+	
 	public Cell(double x_pos, double y_pos, double width, double height) {
-		myShape = new Polygon();
-		myGrid = new RectangleGrid();
-//		myRectangle = new Rectangle(x_pos, y_pos, width, height);
-//		myRectangle.setStroke(Color.ALICEBLUE);
-		myGrid.setShape(myShape, 300.0, 300.0, 30, 30, 30, 30);
-		myShape.setStroke(Color.ROSYBROWN);
+//		myShape = new Polygon();
+//		myGrid = new RectangleGrid();
+		myRectangle = new Rectangle(x_pos, y_pos, width, height);
+		myRectangle.setStroke(Color.ALICEBLUE);
+//		myGrid.setShape(myShape, 300.0, 300.0, 30, 30, 30, 30);
+//		myShape.setStroke(Color.ROSYBROWN);
 
 	}
 	
@@ -68,10 +72,6 @@ public abstract class Cell {
 			myGrid = new HexagonGrid();
 		}
 	}
-	
-	
-	
-	
 
 	public int getMyGridX() {
 		return myGridX;
@@ -119,6 +119,14 @@ public abstract class Cell {
 	
 	public boolean isTree() {
 		return isTree;
+	}
+	
+	public boolean isAnt() {
+		return isAnt;
+	}
+	
+	public boolean isForaging(){
+		return isForaging;
 	}
 
 	public Polygon getMyShape() {
