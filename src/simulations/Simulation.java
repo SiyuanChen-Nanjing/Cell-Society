@@ -16,13 +16,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public abstract class Simulation {
-	
+
 	protected int myNumCells;
 	protected List<List<Cell>> myCells;
-	
+
 	protected String myCellType1;
 	protected String myCellType2;
-	
+
 	protected int myCellCount1;
 	protected int myCellCount2;
 
@@ -33,46 +33,71 @@ public abstract class Simulation {
 	public Simulation(int numCells) {
 		myNumCells = numCells;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return an unmodifiable list of cellular grid
 	 */
 	public List<List<Cell>> getMyCells() {
 		return Collections.unmodifiableList(myCells);
 	}
-	
+
 	/**
 	 * how a grid updates itself
 	 */
 	public abstract void evolve();
-	
+
 	/**
 	 * how the grid should be initialized
 	 */
 	public abstract void initialize() ;
-	
+
 	protected abstract void setCount();
-	
+
 	/**
-	 * get 8 neighbors of a cell, edge cells are surrounded with pseudo-empty cells to make up the missing neighbors
+	 * get 8 neighbors of a cell, edge cells are selected using the toroidal edge type
 	 * @param i row number
 	 * @param j cell number
 	 * @return an arraylist of 8 neighbors
 	 */
 	public ArrayList<Cell> getNeighbors(int i, int j) {
 		ArrayList<Cell> neighbors = new ArrayList<>();
-		neighbors.add(myCells.get(i-1).get(j-1)); 
-		neighbors.add(myCells.get(i-1).get(j)); 
-		neighbors.add(myCells.get(i-1).get(j+1));
-		neighbors.add(myCells.get(i).get(j-1)); 
-		neighbors.add(myCells.get(i).get(j+1));
-		neighbors.add(myCells.get(i+1).get(j-1)); 
-		neighbors.add(myCells.get(i+1).get(j)); 
-		neighbors.add(myCells.get(i+1).get(j+1));
+
+		int maxRow = myCells.size();
+		int maxCol = myCells.get(0).size();
+
+  	int row = i;
+		int col = j;
+		int rowAbove = row - 1;
+		int rowBelow = row + 1;
+		int colAfter = col + 1;
+		int colBefore = col - 1;
+
+		if (col == 1) {
+			colBefore = maxCol - 2;
+		}
+		if (col == maxCol - 2) {
+			colAfter = 1;
+		}
+		if (row == 1) {
+			rowAbove = maxRow - 2;
+		}
+		if (row == maxRow - 2) {
+			rowBelow = 1;
+		}
+		
+		neighbors.add(myCells.get(rowAbove).get(colBefore));
+		neighbors.add(myCells.get(rowAbove).get(col));
+		neighbors.add(myCells.get(rowAbove).get(colAfter));
+		neighbors.add(myCells.get(row).get(colBefore));
+		neighbors.add(myCells.get(row).get(colAfter));
+		neighbors.add(myCells.get(rowBelow).get(colBefore));
+		neighbors.add(myCells.get(rowBelow).get(col));
+		neighbors.add(myCells.get(rowBelow).get(colAfter));
+
 		return neighbors;
 	}
-	
+
 	/**
 	 * get 4 neighbors of a cell, edge cells are surrounded with pseudo-empty cells to make up the missing neighbors
 	 * @param i row number
@@ -82,12 +107,12 @@ public abstract class Simulation {
 	public ArrayList<Cell> getFourNeighbors(int i, int j) {
 		ArrayList<Cell> neighbors = new ArrayList<>();
 		neighbors.add(myCells.get(i-1).get(j));
-		neighbors.add(myCells.get(i).get(j-1)); 
+		neighbors.add(myCells.get(i).get(j-1));
 		neighbors.add(myCells.get(i).get(j+1));
 		neighbors.add(myCells.get(i+1).get(j));
 		return neighbors;
 	}
-	
+
 	/**
 	 * @return the myNumCells
 	 */
@@ -140,16 +165,16 @@ public abstract class Simulation {
 		size.setLayoutY(310);
 		return size;
 	}
-	
+
 	/**
 	 * read and set initial configuration from an XML file
 	 */
 	public abstract void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException;
-	
+
 	/**
 	 * dynamic changer of a parameter (specific to a simulation)
 	 */
 	public abstract Slider parameter1Slider(Text text);
-	
-	
+
+
 }
