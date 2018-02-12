@@ -85,13 +85,12 @@ public abstract class Simulation {
 		if (row == maxRow - 2) {
 			rowBelow = 1;
 		}
+		
 		neighbors.add(myCells.get(rowAbove).get(colBefore));
 		neighbors.add(myCells.get(rowAbove).get(col));
 		neighbors.add(myCells.get(rowAbove).get(colAfter));
-
 		neighbors.add(myCells.get(row).get(colBefore));
 		neighbors.add(myCells.get(row).get(colAfter));
-
 		neighbors.add(myCells.get(rowBelow).get(colBefore));
 		neighbors.add(myCells.get(rowBelow).get(col));
 		neighbors.add(myCells.get(rowBelow).get(colAfter));
