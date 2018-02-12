@@ -5,6 +5,7 @@
 		<type>Fire</type>
 		<title>Spread of Fire</title>
 		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+		<initialConfig>ReadIn</initialConfig>
 	</basic>
 	
 	<globalSettings>

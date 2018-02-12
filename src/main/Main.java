@@ -24,18 +24,27 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import simulations.Fire;
+import simulations.Segregation;
 import simulations.Simulation;
+import simulations.WaTor;
 
 public class Main extends Application {
 
 	public static final int GRID_SIZE = 400;
-    public static final int SCENE_WIDTH = GRID_SIZE;
+    public static final int SCENE_WIDTH = GRID_SIZE + 400;
     public static final int SCENE_HEIGHT = GRID_SIZE + 200;
     public static final Paint BACKGROUND = Color.WHITE;
 	
@@ -52,6 +61,10 @@ public class Main extends Application {
     private Group myGridRoot;
     private Timeline myAnimation;
     private File myCurrentFile;
+    private LineChart<Number, Number> myChart;
+    private XYChart.Series<Number, Number> myDataSeries1;
+    private XYChart.Series<Number, Number> myDataSeries2;
+    private int myStepCount;
     
     private Button myStartButton;
     private Button myPauseButton;
@@ -62,21 +75,34 @@ public class Main extends Application {
     private Button mySlowerButton;
     private Button myRestartButton;
     private Button myRecordButton;
-
+    private Slider mySizeSlider;
+    private Text mySizeText;
+    private Slider myParaSlider;
+    private Text myParaText;
 
 	@Override
 	/**
 	 * Initialize animation by reading the XML file and create a scene according to information stored in the 
 	 * file
 	 */
-	public void start(Stage stage) throws SAXException, IOException, ParserConfigurationException {
+	public void start(Stage stage) throws Exception {
 		FileChooser fc = new FileChooser();
 		File file = fc.showOpenDialog(stage);
 		myCurrentFile = file;
-		Simulation simulation = XMLReader.setupSimulation(file);
+		Simulation simulation = XMLReader.setupSimulation(file, stage);
+		mySimulation = simulation;
+		
+		if (XMLReader.readInitialConfigMode(file).equals("ReadIn")) {
+			File config = fc.showOpenDialog(stage);
+			mySimulation.readConfiguration(config, stage);
+		}
+		
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		String title = XMLReader.getTitle(file);
-
+		
+		myStepCount = 0;
+		setChart();
+		
 		stage.setScene(myScene);
         stage.setTitle(title);
         stage.show();
@@ -103,7 +129,6 @@ public class Main extends Application {
 		Scene scene = new Scene(root, width, height, BACKGROUND);
 
 		myCells = simulation.getMyCells();
-		mySimulation = simulation;
 		for (int i=1;i<myCells.size()-1;i++) {
 			for (int j = 1; j<myCells.size()-1;j++) {
 				gridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
@@ -128,6 +153,13 @@ public class Main extends Application {
 				myGridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
 			}
 		}
+		myStepCount++;
+		updateChart();
+	}
+	
+	private void updateChart() {
+		myDataSeries1.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount1()));
+		myDataSeries2.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount2()));
 	}
 	
 	// load all the UI nodes into the group containing all the buttons
@@ -141,6 +173,12 @@ public class Main extends Application {
 		myButtonRoot.getChildren().add(mySlowerButton);
 		myButtonRoot.getChildren().add(myRestartButton);
 		myButtonRoot.getChildren().add(myRecordButton);
+		
+		myButtonRoot.getChildren().add(mySizeSlider);
+		myButtonRoot.getChildren().add(mySizeText);
+		
+		myButtonRoot.getChildren().add(myParaSlider);
+		myButtonRoot.getChildren().add(myParaText);
 	}
 	
 	private void setupUI(String filename) {
@@ -154,6 +192,36 @@ public class Main extends Application {
 		mySlowerButton = createSlowerButton(rb.getString("SlowerKey"));
 		myRestartButton = createRestartButton(rb.getString("RestartKey"));
 		myRecordButton = createRecordButton(rb.getString("RecordKey"));
+		
+		mySizeText = new Text("Size: " + mySimulation.getMyNumCells() + "*" + mySimulation.getMyNumCells());
+		mySizeText.setLayoutX(550);
+		mySizeText.setLayoutY(320);
+		mySizeSlider = mySimulation.sizeBar(mySizeText);
+		mySizeSlider.valueProperty().addListener((observable, oldvalue, newvalue) ->
+        {
+        		myStepCount = 0;
+        		myButtonRoot.getChildren().remove(myChart);
+        		setChart();
+        });
+		
+		myParaText = new Text();
+		myParaText.setLayoutX(550);
+		myParaText.setLayoutY(370);
+		if (mySimulation.getMyCellType1().equals("Red")) {
+			Segregation seg = (Segregation)mySimulation;
+			myParaText.setText("Minimum satisfaction: " + seg.getMyMinSatisfaction());
+			myParaSlider = seg.parameter1Slider(myParaText);
+		}
+		else if (mySimulation.getMyCellType1().equals("Tree")) {
+			Fire fire = (Fire)mySimulation;
+			myParaText.setText("Probability to catch fire: " + fire.getProbCatch());
+			myParaSlider = fire.parameter1Slider(myParaText);
+		}
+		else if (mySimulation.getMyCellType1().equals("Fish")) {
+			WaTor wator = (WaTor)mySimulation;
+			myParaText.setText("Shark rounds to reproduce: " + wator.getMySharkRoundsToReproduce());
+			myParaSlider = wator.parameter1Slider(myParaText);
+		}
 	}
 	
 	private Button createStartButton(String txt) {
@@ -209,7 +277,13 @@ public class Main extends Application {
 			try {
 				changeSimulation(file);
 			} catch (SAXException | IOException | ParserConfigurationException e1) {
-				throw new IllegalArgumentException(XML_ERROR_MSG);
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("Cannot simulate from file chosen.");
+				alert.show();
+			} catch (IllegalArgumentException e2) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("You much choose a file to load.");
+				alert.show();
 			}
 		});
 		return load;
@@ -224,8 +298,10 @@ public class Main extends Application {
 				changeSimulation(myCurrentFile);
 				myAnimation.pause();
 			} catch (SAXException | IOException | ParserConfigurationException e1) {
-				throw new IllegalArgumentException(XML_ERROR_MSG);
-			}
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("Cannot simulate from file chosen.");
+				alert.show();
+			} 
 		});
 		return restart;
 	}
@@ -259,7 +335,13 @@ public class Main extends Application {
 			try {
 				writeConfig(file, mySimulation.getMyCells());
 			} catch (ParserConfigurationException | TransformerException e1) {
-				throw new IllegalArgumentException("Cannot write the current configuration into indicated file");
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("Cannot save configuration into file indicated.");
+				alert.show();
+			} catch (IllegalArgumentException e2) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("You much choose a file to save.");
+				alert.show();
 			}
 		});
 		return record;
@@ -278,7 +360,7 @@ public class Main extends Application {
 				root.appendChild(cell);
 				
 				Element name = doc.createElement("Type");
-				name.appendChild(doc.createTextNode(c.getType()));
+				name.appendChild(doc.createTextNode(c.getMyType()));
 				cell.appendChild(name);
 				
 				Element xpos = doc.createElement("XPos");
@@ -307,12 +389,49 @@ public class Main extends Application {
 		transformer.transform(source, result);
 	}
 	
+	private void setChart() {
+		NumberAxis time = new NumberAxis();
+		time.setLabel("Step");
+		NumberAxis count = new NumberAxis();
+		count.setLabel("Count");
+		myChart = new LineChart<Number, Number>(time, count);
+		myChart.setLayoutX(410);
+		myChart.setLayoutY(10);
+		myChart.setPrefHeight(300);
+		myChart.setPrefWidth(350);
+		
+		myDataSeries1 = new XYChart.Series<Number, Number>();
+		myDataSeries1.setName(mySimulation.getMyCellType1());
+		myDataSeries1.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount1()));
+		
+		myDataSeries2 = new XYChart.Series<Number, Number>();
+		myDataSeries2.setName(mySimulation.getMyCellType2());
+		myDataSeries2.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount2()));
+		
+		myChart.getData().add(myDataSeries1);
+		myChart.getData().add(myDataSeries2);
+		
+		myChart.setLegendVisible(true);
+	
+		myButtonRoot.getChildren().add(myChart);
+	}
+	
 	private void changeSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
-		Simulation simulation = XMLReader.setupSimulation(file);
+		Simulation simulation = XMLReader.setupSimulation(file, myStage);
 		simulation.initialize();
+		
+		if (XMLReader.readInitialConfigMode(file).equals("ReadIn")) {
+			FileChooser fc = new FileChooser();
+			File config = fc.showOpenDialog(myStage);
+			mySimulation.readConfiguration(config, myStage);
+		}
+		
+		mySimulation = simulation;
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		myStage.setScene(myScene);
 		myCurrentFile = file;
+		myStepCount = 0;
+		setChart();
 	}
 	
 	/**

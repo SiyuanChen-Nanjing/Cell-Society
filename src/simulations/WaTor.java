@@ -1,13 +1,27 @@
 package simulations;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import cells.Cell;
 import cells.EmptyCell;
 import cells.FishCell;
 import cells.SharkCell;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Slider;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import main.Main;
+import main.XMLReader;
 
 public class WaTor extends Simulation {
 
@@ -17,13 +31,22 @@ public class WaTor extends Simulation {
 	private double mySharkPercent = 1-myEmptyPercent-myFishPercent;
 	
 	private int myFishRoundsToReproduce = 4;
-	private int mySharkRoundsToReproduce = 10;
+	private int mySharkRoundsToReproduce = 2* myFishRoundsToReproduce;
 	
+	/**
+	 * Default constructor for WaTor Simulation
+	 * @param numCells number of cells on one side of a grid
+	 */
 	public WaTor(int numCells) {
 		super(numCells);
+		myCellType1 = "Fish";
+		myCellType2 = "Shark";
 	}
 
 	@Override
+	/**
+	 * how the grid updates itself based on Wator rules
+	 */
 	public void evolve() {
 		List<List<Cell>> updatedCells = new ArrayList<>(myCells);
 		for (int i = 1; i < myCells.size()-1;i++) {
@@ -57,6 +80,7 @@ public class WaTor extends Simulation {
 				updatedCells.get(i).set(j, new FishCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 						current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 				moved.setMyRoundsSurvived(0);
+				myCellCount1++;
 			}
 			else {
 				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
@@ -81,6 +105,7 @@ public class WaTor extends Simulation {
 			Cell fishDestination = myCells.get(fishPoint.getMyRow()).get(fishPoint.getMyCol());
 			SharkCell fishMoved = new SharkCell(fishDestination.getMyRectangle().getX(), fishDestination.getMyRectangle().getY(), 
 					fishDestination.getMyRectangle().getWidth(), fishDestination.getMyRectangle().getHeight(), fishPoint.getMyRow(), fishPoint.getMyCol());
+			myCellCount1--;
 			fishMoved.setMyRoundsSurvived(current.getMyRoundsSurvived());
 			fishMoved.setMyEnergy(current.getMyEnergy()+current.getFishEnergyGain());
 			
@@ -88,6 +113,7 @@ public class WaTor extends Simulation {
 				updatedCells.get(i).set(j, new SharkCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 						current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 				fishMoved.setMyRoundsSurvived(0);
+				myCellCount2++;
 			}
 			else {
 				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
@@ -99,6 +125,7 @@ public class WaTor extends Simulation {
 			if (current.getMyEnergy()<=0) {
 				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
+				myCellCount2--;
 			}
 			else {
 				Point point = empty.get((int)(Math.random()*(empty.size()-1)));
@@ -111,6 +138,7 @@ public class WaTor extends Simulation {
 					updatedCells.get(i).set(j, new SharkCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
 					moved.setMyRoundsSurvived(0);
+					myCellCount2++;
 				}
 				else {
 					updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
@@ -123,6 +151,7 @@ public class WaTor extends Simulation {
 			if (current.getMyEnergy()<=0) {
 				updatedCells.get(i).set(j, new EmptyCell(current.getMyRectangle().getX(), current.getMyRectangle().getY(), 
 							current.getMyRectangle().getWidth(), current.getMyRectangle().getHeight(), i,j));
+				myCellCount2--;
 			}
 		}
 	}
@@ -294,14 +323,94 @@ public class WaTor extends Simulation {
 			cells.add(row);
 		}
 		myCells = cells;
+		setCount();
 	}
 	
+	/**
+	 * 
+	 * @param empty input percentage of empty cells
+	 */
 	public void setEmptyPercent(double empty) { myEmptyPercent = empty;}
 	
+	/**
+	 * 
+	 * @param ratio ratio of fish and shark cells
+	 */
 	public void setRatio(double ratio) { myFishSharkRatio = ratio;}
 	
+	/**
+	 * 
+	 * @param fish input reproduction rounds for fishes
+	 * @param shark input reproduction rounds for sharks
+	 */
 	public void setReproductionRounds(int fish, int shark) {
 		myFishRoundsToReproduce = fish;
 		mySharkRoundsToReproduce = shark;
+	}
+
+	@Override
+	protected void setCount() {
+		for (List<Cell> col:myCells) {
+			for (Cell c: col) {
+				if (c.isShark()) myCellCount2++;
+				else if (c.isFish()) myCellCount1++;
+			}
+		}
+	}
+	
+	@Override
+	/**
+	 * read and set initial configuration from an XML file
+	 */
+	public void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException {
+		double cell_size = Main.GRID_SIZE/(double)myNumCells;
+		Document doc = XMLReader.read(file);
+		List<List<Cell>> cells = new ArrayList<>(myCells);
+		NodeList type = doc.getElementsByTagName("Type");
+		NodeList xpos = doc.getElementsByTagName("XPos");
+		NodeList ypos = doc.getElementsByTagName("YPos");
+		NodeList row = doc.getElementsByTagName("Row");
+		NodeList col = doc.getElementsByTagName("Column");
+		for (int i=0;i<type.getLength();i++) {
+			int row_num = Integer.parseInt(row.item(i).getFirstChild().getNodeValue());
+			int col_num = Integer.parseInt(col.item(i).getFirstChild().getNodeValue());
+			if (type.item(i).getFirstChild().getNodeValue().equals("Empty")) cells.get(row_num).set(col_num, new EmptyCell(Double.parseDouble(xpos.item(i).getFirstChild().getNodeValue()), Double.parseDouble(ypos.item(i).getFirstChild().getNodeValue()),cell_size, cell_size, row_num, col_num));
+			else if (type.item(i).getFirstChild().getNodeValue().equals("Fish")) cells.get(row_num).set(col_num, new FishCell(Double.parseDouble(xpos.item(i).getFirstChild().getNodeValue()), Double.parseDouble(ypos.item(i).getFirstChild().getNodeValue()),cell_size, cell_size, row_num, col_num));
+			else if (type.item(i).getFirstChild().getNodeValue().equals("Shark")) cells.get(row_num).set(col_num, new SharkCell(Double.parseDouble(xpos.item(i).getFirstChild().getNodeValue()), Double.parseDouble(ypos.item(i).getFirstChild().getNodeValue()),cell_size, cell_size, row_num, col_num));
+			else {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("The cell state you indicated does not match the current simulation.");
+				alert.showAndWait();
+				FileChooser fc = new FileChooser();
+				File f = fc.showOpenDialog(stage);
+				readConfiguration(f,stage);
+				return;
+			}
+		}
+		myCells = cells;
+		setCount();
+	}
+	
+	@Override
+	/**
+	 * dynamic changer for sharkRoundsToReproduce
+	 */
+	public Slider parameter1Slider(Text text) {
+		Slider sharkReproduce = new Slider(2,100,this.mySharkRoundsToReproduce);
+		sharkReproduce.valueProperty().addListener((observable, oldvalue, newvalue) ->
+        {
+            this.mySharkRoundsToReproduce = newvalue.intValue();
+            text.setText("Shark rounds to reproduce: " + this.mySharkRoundsToReproduce);
+        } );
+		sharkReproduce.setLayoutX(410);
+		sharkReproduce.setLayoutY(370);
+		return sharkReproduce;
+	}
+
+	/**
+	 * @return the mySharkRoundsToReproduce
+	 */
+	public int getMySharkRoundsToReproduce() {
+		return mySharkRoundsToReproduce;
 	}
 }

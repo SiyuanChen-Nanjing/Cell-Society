@@ -5,6 +5,7 @@
 		<type>WaTor</type>
 		<title>Predator and Prey</title>
 		<author>Siyuan Chen, Jamie Kim, Ryan Suggs</author>
+		<initialConfig>RandomByPercentage</initialConfig>
 	</basic>
 	
 	<globalSettings>
@@ -13,7 +14,7 @@
 	</globalSettings>
 	
 	<initialization>
-		<size>15</size>
+		<size>30</size>
 		<emptyPercent>0.1</emptyPercent>
     		<fishSharkRatio>3</fishSharkRatio>
 	</initialization>
