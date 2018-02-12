@@ -8,15 +8,12 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import cells.*;
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
 import javafx.scene.control.Slider;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public abstract class Simulation {
 	
@@ -97,30 +94,7 @@ public abstract class Simulation {
 		return size;
 	}
 	
-	/**
-	public void readConfiguration(File file) throws SAXException, IOException, ParserConfigurationException {
-		double cell_size = Main.GRID_SIZE/(double)myNumCells;
-		
-		Document doc = XMLReader.read(file);
-		List<List<Cell>> cells = new ArrayList<>(myCells);
-		NodeList type = doc.getElementsByTagName("Type");
-		NodeList xpos = doc.getElementsByTagName("XPos");
-		NodeList ypos = doc.getElementsByTagName("YPos");
-		NodeList row = doc.getElementsByTagName("Row");
-		NodeList col = doc.getElementsByTagName("Column");
-		for (int i=0;i<type.getLength();i++) {
-			Binding binding = new Binding();
-			GroovyShell shell = new GroovyShell(binding);
-			int row_num = Integer.parseInt(row.item(i).getFirstChild().getNodeValue());
-			int col_num = Integer.parseInt(col.item(i).getFirstChild().getNodeValue());
-			String code = "cells.get(row_num).set(col_num, new " 
-					+ type.item(i).getFirstChild().getNodeValue() 
-					+ "Cell(Double.parseDouble(xpos.item(i).getFirstChild().getNodeValue()), Double.parseDouble(xpos.item(i).getFirstChild().getNodeValue()),cell_size, cell_size, row_num, col_num))";
-			shell.evaluate(code);
-		}
-		myCells = cells;
-	}
-	**/
+	public abstract void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException;
 	
 	public int getMyNumCells() {
 		return myNumCells;

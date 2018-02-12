@@ -1,13 +1,25 @@
 package simulations;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import cells.AliveCell;
 import cells.Cell;
 import cells.DeadCell;
 import cells.EmptyCell;
+import javafx.scene.control.Alert;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import main.Main;
+import main.XMLReader;
 
 public class GameOfLife extends Simulation {
 
@@ -97,4 +109,34 @@ public class GameOfLife extends Simulation {
 		setCount();
 	}
 
+	@Override
+	public void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException {
+		double cell_size = Main.GRID_SIZE/(double)myNumCells;
+		Document doc = XMLReader.read(file);
+		List<List<Cell>> cells = new ArrayList<>(myCells);
+		NodeList type = doc.getElementsByTagName("Type");
+		NodeList xpos = doc.getElementsByTagName("XPos");
+		NodeList ypos = doc.getElementsByTagName("YPos");
+		NodeList row = doc.getElementsByTagName("Row");
+		NodeList col = doc.getElementsByTagName("Column");
+		for (int i=0;i<type.getLength();i++) {
+			int row_num = Integer.parseInt(row.item(i).getFirstChild().getNodeValue());
+			int col_num = Integer.parseInt(col.item(i).getFirstChild().getNodeValue());
+			if (type.item(i).getFirstChild().getNodeValue().equals("Empty")) cells.get(row_num).set(col_num, new EmptyCell(Double.parseDouble(xpos.item(i).getFirstChild().getNodeValue()), Double.parseDouble(ypos.item(i).getFirstChild().getNodeValue()),cell_size, cell_size, row_num, col_num));
+			else if (type.item(i).getFirstChild().getNodeValue().equals("Alive")) cells.get(row_num).set(col_num, new AliveCell(Double.parseDouble(xpos.item(i).getFirstChild().getNodeValue()), Double.parseDouble(ypos.item(i).getFirstChild().getNodeValue()),cell_size, cell_size, row_num, col_num));
+			else if (type.item(i).getFirstChild().getNodeValue().equals("Dead")) cells.get(row_num).set(col_num, new DeadCell(Double.parseDouble(xpos.item(i).getFirstChild().getNodeValue()), Double.parseDouble(ypos.item(i).getFirstChild().getNodeValue()),cell_size, cell_size, row_num, col_num));
+			else {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText("The cell state you indicated does not match the current simulation.");
+				alert.showAndWait();
+				FileChooser fc = new FileChooser();
+				File f = fc.showOpenDialog(stage);
+				readConfiguration(f,stage);
+				return;
+			}
+		}
+		myCells = cells;
+		setCount();
+	}
+	
 }

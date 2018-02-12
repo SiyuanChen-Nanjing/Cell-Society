@@ -87,12 +87,10 @@ public class Main extends Application {
 		Simulation simulation = XMLReader.setupSimulation(file, stage);
 		mySimulation = simulation;
 		
-		/**
 		if (XMLReader.readInitialConfigMode(file).equals("ReadIn")) {
 			File config = fc.showOpenDialog(stage);
-			mySimulation.readConfiguration(config);
+			mySimulation.readConfiguration(config, stage);
 		}
-		**/
 		
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		String title = XMLReader.getTitle(file);
@@ -395,6 +393,13 @@ public class Main extends Application {
 	private void changeSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
 		Simulation simulation = XMLReader.setupSimulation(file, myStage);
 		simulation.initialize();
+		
+		if (XMLReader.readInitialConfigMode(file).equals("ReadIn")) {
+			FileChooser fc = new FileChooser();
+			File config = fc.showOpenDialog(myStage);
+			mySimulation.readConfiguration(config, myStage);
+		}
+		
 		mySimulation = simulation;
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		myStage.setScene(myScene);
