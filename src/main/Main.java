@@ -93,7 +93,7 @@ public class Main extends Application {
 		mySimulation = simulation;
 		for (int i=1;i<myCells.size()-1;i++) {
 			for (int j = 1; j<myCells.size()-1;j++) {
-				gridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
+				gridRoot.getChildren().add(myCells.get(i).get(j).getMyShape());
 			}
 		}
 		myRoot = root;
@@ -111,7 +111,10 @@ public class Main extends Application {
 		myGridRoot.getChildren().clear();
 		myCells = mySimulation.getMyCells();
 		for (int i=1;i<myCells.size()-1;i++) 
-			for (int j = 1; j<myCells.size()-1;j++) myGridRoot.getChildren().add(myCells.get(i).get(j).getMyRectangle());
+			for (int j = 1; j<myCells.size()-1;j++) {
+				myGridRoot.getChildren().add(myCells.get(i).get(j).getMyShape());
+			}
+//		.getMyRectangle());
 	}
 	
 	private void loadUI() {
