@@ -30,6 +30,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
@@ -47,12 +49,12 @@ public class Main extends Application {
     public static final int SCENE_WIDTH = GRID_SIZE + 400;
     public static final int SCENE_HEIGHT = GRID_SIZE + 200;
     public static final Paint BACKGROUND = Color.WHITE;
-	
+
     public static final int FRAME_RATE = 3;
     public static final int MILLISECOND_DELAY = 1000 / FRAME_RATE;
     public static final double SECOND_DELAY = 1.0 / FRAME_RATE;
     public static final String XML_ERROR_MSG = "The file you have chosen has the wrong format.";
-    
+
     private Stage myStage;
     private Simulation mySimulation;
     private List<List<Cell>> myCells;
@@ -65,7 +67,7 @@ public class Main extends Application {
     private XYChart.Series<Number, Number> myDataSeries1;
     private XYChart.Series<Number, Number> myDataSeries2;
     private int myStepCount;
-    
+
     private Button myStartButton;
     private Button myPauseButton;
     private Button myResumeButton;
@@ -75,6 +77,7 @@ public class Main extends Application {
     private Button mySlowerButton;
     private Button myRestartButton;
     private Button myRecordButton;
+    private MenuButton myGridEdgeTypeButton;
     private Slider mySizeSlider;
     private Text mySizeText;
     private Slider myParaSlider;
@@ -82,7 +85,7 @@ public class Main extends Application {
 
 	@Override
 	/**
-	 * Initialize animation by reading the XML file and create a scene according to information stored in the 
+	 * Initialize animation by reading the XML file and create a scene according to information stored in the
 	 * file
 	 */
 	public void start(Stage stage) throws Exception {
@@ -91,18 +94,18 @@ public class Main extends Application {
 		myCurrentFile = file;
 		Simulation simulation = XMLReader.setupSimulation(file, stage);
 		mySimulation = simulation;
-		
+
 		if (XMLReader.readInitialConfigMode(file).equals("ReadIn")) {
 			File config = fc.showOpenDialog(stage);
 			mySimulation.readConfiguration(config, stage);
 		}
-		
+
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		String title = XMLReader.getTitle(file);
-		
+
 		myStepCount = 0;
 		setChart();
-		
+
 		stage.setScene(myScene);
         stage.setTitle(title);
         stage.show();
@@ -122,10 +125,10 @@ public class Main extends Application {
 		Group root = new Group();
 		Group buttonRoot = new Group();
 		Group gridRoot = new Group();
-		
+
 		root.getChildren().add(buttonRoot);
 		root.getChildren().add(gridRoot);
-		
+
 		Scene scene = new Scene(root, width, height, BACKGROUND);
 
 		myCells = simulation.getMyCells();
@@ -136,7 +139,7 @@ public class Main extends Application {
 		}
 		myButtonRoot = buttonRoot;
 		myGridRoot = gridRoot;
-		
+
 		setupUI("assets.ButtonText");
 		loadUI();
 
@@ -156,12 +159,12 @@ public class Main extends Application {
 		myStepCount++;
 		updateChart();
 	}
-	
+
 	private void updateChart() {
 		myDataSeries1.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount1()));
 		myDataSeries2.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount2()));
 	}
-	
+
 	// load all the UI nodes into the group containing all the buttons
 	private void loadUI() {
 		myButtonRoot.getChildren().add(myStartButton);
@@ -173,14 +176,15 @@ public class Main extends Application {
 		myButtonRoot.getChildren().add(mySlowerButton);
 		myButtonRoot.getChildren().add(myRestartButton);
 		myButtonRoot.getChildren().add(myRecordButton);
-		
+		myButtonRoot.getChildren().add(myGridEdgeTypeButton);
+
 		myButtonRoot.getChildren().add(mySizeSlider);
 		myButtonRoot.getChildren().add(mySizeText);
-		
+
 		myButtonRoot.getChildren().add(myParaSlider);
 		myButtonRoot.getChildren().add(myParaText);
 	}
-	
+
 	private void setupUI(String filename) {
 		ResourceBundle rb = ResourceBundle.getBundle(filename);
 		myStartButton = createStartButton(rb.getString("StartKey"));
@@ -192,7 +196,8 @@ public class Main extends Application {
 		mySlowerButton = createSlowerButton(rb.getString("SlowerKey"));
 		myRestartButton = createRestartButton(rb.getString("RestartKey"));
 		myRecordButton = createRecordButton(rb.getString("RecordKey"));
-		
+		myGridEdgeTypeButton = createGridEdgeTypeButton(rb.getString("GridKey"));
+
 		mySizeText = new Text("Size: " + mySimulation.getMyNumCells() + "*" + mySimulation.getMyNumCells());
 		mySizeText.setLayoutX(550);
 		mySizeText.setLayoutY(320);
@@ -203,7 +208,7 @@ public class Main extends Application {
         		myButtonRoot.getChildren().remove(myChart);
         		setChart();
         });
-		
+
 		myParaText = new Text();
 		myParaText.setLayoutX(550);
 		myParaText.setLayoutY(370);
@@ -226,7 +231,7 @@ public class Main extends Application {
 			myParaSlider = new Slider();
 		}
 	}
-	
+
 	private Button createStartButton(String txt) {
 		Button start = new Button(txt);
 		start.setLayoutX(50);
@@ -236,7 +241,7 @@ public class Main extends Application {
 		});
 		return start;
 	}
-	
+
 	private Button createPauseButton(String txt) {
 		Button pause = new Button(txt);
 		pause.setLayoutX(100);
@@ -246,7 +251,7 @@ public class Main extends Application {
 		});
 		return pause;
 	}
-	
+
 	private Button createResumeButton(String txt) {
 		Button resume = new Button(txt);
 		resume.setLayoutX(170);
@@ -256,7 +261,7 @@ public class Main extends Application {
 		});
 		return resume;
 	}
-	
+
 	private Button createStepButton(String txt) {
 		Button stop = new Button(txt);
 		stop.setLayoutX(250);
@@ -267,7 +272,7 @@ public class Main extends Application {
 		});
 		return stop;
 	}
-	
+
 	private Button createLoadButton(String txt) {
 		Button load = new Button(txt);
 		load.setLayoutX(300);
@@ -291,7 +296,7 @@ public class Main extends Application {
 		});
 		return load;
 	}
-	
+
 	private Button createRestartButton(String txt) {
 		Button restart = new Button(txt);
 		restart.setLayoutX(180);
@@ -304,11 +309,11 @@ public class Main extends Application {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setContentText("Cannot simulate from file chosen.");
 				alert.show();
-			} 
+			}
 		});
 		return restart;
 	}
-	
+
 	private Button createFasterButton(String txt) {
 		Button faster = new Button(txt);
 		faster.setLayoutX(100);
@@ -318,7 +323,7 @@ public class Main extends Application {
 		});
 		return faster;
 	}
-	
+
 	private Button createSlowerButton(String txt) {
 		Button slower = new Button(txt);
 		slower.setLayoutX(200);
@@ -328,7 +333,7 @@ public class Main extends Application {
 		});
 		return slower;
 	}
-	
+
 	private Button createRecordButton(String txt) {
 		Button record = new Button(txt);
 		record.setLayoutX(270);
@@ -343,55 +348,64 @@ public class Main extends Application {
 				alert.show();
 			} catch (IllegalArgumentException e2) {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setContentText("You much choose a file to save.");
+				alert.setContentText("You must choose a file to save.");
 				alert.show();
 			}
 		});
 		return record;
 	}
-	
+
+	// Currently the GridEdgeType menu button works, but only toroidal is implemented.
+	private MenuButton createGridEdgeTypeButton(String txt) {
+		MenuButton grid = new MenuButton(txt);
+		grid.setLayoutX(300);
+		grid.setLayoutY(450);
+		grid.getItems().addAll(new MenuItem("Finite"), new MenuItem("Toroidal"), new MenuItem("Infinite"));
+		return grid;
+	}
+
 	private static void writeConfig(File file, List<List<Cell>> cells) throws ParserConfigurationException, TransformerException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = factory.newDocumentBuilder();
 		Document doc = db.newDocument();
 		Element root = doc.createElement("Configuration");
 		doc.appendChild(root);
-		
+
 		for (List<Cell> column: cells) {
 			for (Cell c: column) {
 				Element cell = doc.createElement("Cell");
 				root.appendChild(cell);
-				
+
 				Element name = doc.createElement("Type");
 				name.appendChild(doc.createTextNode(c.getMyType()));
 				cell.appendChild(name);
-				
+
 				Element xpos = doc.createElement("XPos");
 				xpos.appendChild(doc.createTextNode(c.getMyRectangle().getX() + ""));
 				cell.appendChild(xpos);
-				
+
 				Element ypos = doc.createElement("YPos");
 				ypos.appendChild(doc.createTextNode(c.getMyRectangle().getY() + ""));
 				cell.appendChild(ypos);
-				
+
 				Element row = doc.createElement("Row");
 				row.appendChild(doc.createTextNode(c.getMyGridX() + ""));
 				cell.appendChild(row);
-				
+
 				Element col = doc.createElement("Column");
 				col.appendChild(doc.createTextNode(c.getMyGridY() + ""));
 				cell.appendChild(col);
 			}
 		}
-		
+
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer = tf.newTransformer();
 		DOMSource source = new DOMSource(doc);
 		StreamResult result = new StreamResult(file);
-		
+
 		transformer.transform(source, result);
 	}
-	
+
 	private void setChart() {
 		NumberAxis time = new NumberAxis();
 		time.setLabel("Step");
@@ -402,33 +416,33 @@ public class Main extends Application {
 		myChart.setLayoutY(10);
 		myChart.setPrefHeight(300);
 		myChart.setPrefWidth(350);
-		
+
 		myDataSeries1 = new XYChart.Series<Number, Number>();
 		myDataSeries1.setName(mySimulation.getMyCellType1());
 		myDataSeries1.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount1()));
-		
+
 		myDataSeries2 = new XYChart.Series<Number, Number>();
 		myDataSeries2.setName(mySimulation.getMyCellType2());
 		myDataSeries2.getData().add(new XYChart.Data<>(myStepCount, mySimulation.getMyCellCount2()));
-		
+
 		myChart.getData().add(myDataSeries1);
 		myChart.getData().add(myDataSeries2);
-		
+
 		myChart.setLegendVisible(true);
-	
+
 		myButtonRoot.getChildren().add(myChart);
 	}
-	
+
 	private void changeSimulation(File file) throws SAXException, IOException, ParserConfigurationException {
 		Simulation simulation = XMLReader.setupSimulation(file, myStage);
 		simulation.initialize();
-		
+
 		if (XMLReader.readInitialConfigMode(file).equals("ReadIn")) {
 			FileChooser fc = new FileChooser();
 			File config = fc.showOpenDialog(myStage);
 			mySimulation.readConfiguration(config, myStage);
 		}
-		
+
 		mySimulation = simulation;
 		myScene = setupScene(SCENE_WIDTH, SCENE_HEIGHT, simulation);
 		myStage.setScene(myScene);
@@ -436,7 +450,7 @@ public class Main extends Application {
 		myStepCount = 0;
 		setChart();
 	}
-	
+
 	/**
 	 * start game
 	 */
