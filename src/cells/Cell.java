@@ -4,7 +4,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Polygon;
 import grids.Grid;
-import grids.GridModel;
 import grids.HexagonGrid;
 import grids.RectangleGrid;
 import grids.TriangleGrid;
@@ -30,15 +29,34 @@ public abstract class Cell {
 	private int myGridY;
 
 	private Grid myGrid;
-	private Polygon myShape;
-	private GridModel myGridModel;
+	protected Polygon myShape;
 	
 	
 	public Cell(double x_pos, double y_pos, double width, double height) {
+		myShape = new Polygon();
 		myGrid = new RectangleGrid();
+//		myRectangle = new Rectangle(x_pos, y_pos, width, height);
+//		myRectangle.setStroke(Color.ALICEBLUE);
+		myGrid.setShape(myShape, 300.0, 300.0, 30, 30, 30, 30);
+		myShape.setStroke(Color.ROSYBROWN);
+
+	}
+	
+	public Cell(double x_pos, double y_pos, double width, double height, int i, int j) {
 		myRectangle = new Rectangle(x_pos, y_pos, width, height);
 		myRectangle.setStroke(Color.BLACK);
+		myGridX = i;
+		myGridY = j;
 	}
+	
+	public Cell(Polygon shape, double width, double height, 
+			int row, int col, int numRows, int numCols) {
+		myShape =  new Polygon();
+		myGrid = new TriangleGrid();
+		myGrid.setShape(myShape, width, height, row, col, numRows, numCols);
+		myShape.setStroke(Color.BLACK);
+	}
+	
 	
 	public void setGridModel (Grid grid) {
 		myGrid = grid;
@@ -49,19 +67,9 @@ public abstract class Cell {
 		} else if (grid instanceof HexagonGrid) {
 			myGrid = new HexagonGrid();
 		}
-		createCells();
 	}
 	
-	public void createCells() {
-		
-	}
 	
-	public Cell(double x_pos, double y_pos, double width, double height, int i, int j) {
-		myRectangle = new Rectangle(x_pos, y_pos, width, height);
-		myRectangle.setStroke(Color.BLACK);
-		myGridX = i;
-		myGridY = j;
-	}
 	
 	
 
@@ -93,10 +101,6 @@ public abstract class Cell {
 		return myRectangle;
 	}
 	
-	public GridModel getMyGrid(){
-		return myGridModel;
-	}
-
 	public boolean isEmpty() {
 		return isEmpty;
 	}

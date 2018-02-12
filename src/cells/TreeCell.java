@@ -7,6 +7,6 @@ public class TreeCell extends Cell {
 	public TreeCell(double x_pos, double y_pos, double width, double height) {
 		super(x_pos, y_pos, width, height);
 		isTree = true;
-		myRectangle.setFill(Color.FORESTGREEN);
+		getMyShape().setFill(Color.FORESTGREEN);
 	}
 }
