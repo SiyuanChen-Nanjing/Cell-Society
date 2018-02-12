@@ -33,6 +33,10 @@ public class WaTor extends Simulation {
 	private int myFishRoundsToReproduce = 4;
 	private int mySharkRoundsToReproduce = 2* myFishRoundsToReproduce;
 	
+	/**
+	 * Default constructor for WaTor Simulation
+	 * @param numCells number of cells on one side of a grid
+	 */
 	public WaTor(int numCells) {
 		super(numCells);
 		myCellType1 = "Fish";
@@ -40,6 +44,9 @@ public class WaTor extends Simulation {
 	}
 
 	@Override
+	/**
+	 * how the grid updates itself based on Wator rules
+	 */
 	public void evolve() {
 		List<List<Cell>> updatedCells = new ArrayList<>(myCells);
 		for (int i = 1; i < myCells.size()-1;i++) {
@@ -319,10 +326,23 @@ public class WaTor extends Simulation {
 		setCount();
 	}
 	
+	/**
+	 * 
+	 * @param empty input percentage of empty cells
+	 */
 	public void setEmptyPercent(double empty) { myEmptyPercent = empty;}
 	
+	/**
+	 * 
+	 * @param ratio ratio of fish and shark cells
+	 */
 	public void setRatio(double ratio) { myFishSharkRatio = ratio;}
 	
+	/**
+	 * 
+	 * @param fish input reproduction rounds for fishes
+	 * @param shark input reproduction rounds for sharks
+	 */
 	public void setReproductionRounds(int fish, int shark) {
 		myFishRoundsToReproduce = fish;
 		mySharkRoundsToReproduce = shark;
@@ -339,6 +359,9 @@ public class WaTor extends Simulation {
 	}
 	
 	@Override
+	/**
+	 * read and set initial configuration from an XML file
+	 */
 	public void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException {
 		double cell_size = Main.GRID_SIZE/(double)myNumCells;
 		Document doc = XMLReader.read(file);
@@ -369,6 +392,9 @@ public class WaTor extends Simulation {
 	}
 	
 	@Override
+	/**
+	 * dynamic changer for sharkRoundsToReproduce
+	 */
 	public Slider parameter1Slider(Text text) {
 		Slider sharkReproduce = new Slider(2,100,this.mySharkRoundsToReproduce);
 		sharkReproduce.valueProperty().addListener((observable, oldvalue, newvalue) ->

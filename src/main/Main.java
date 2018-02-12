@@ -37,7 +37,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import simulations.Fire;
-import simulations.GameOfLife;
 import simulations.Segregation;
 import simulations.Simulation;
 import simulations.WaTor;
@@ -361,7 +360,7 @@ public class Main extends Application {
 				root.appendChild(cell);
 				
 				Element name = doc.createElement("Type");
-				name.appendChild(doc.createTextNode(c.getType()));
+				name.appendChild(doc.createTextNode(c.getMyType()));
 				cell.appendChild(name);
 				
 				Element xpos = doc.createElement("XPos");

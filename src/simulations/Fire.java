@@ -25,13 +25,23 @@ import main.XMLReader;
 
 public class Fire extends Simulation{
 	private double probCatch = 0.5;
-
+	
+	/**
+	 * Default constructor for Fire Simulation
+	 * @param numCells number of cells on one side of a grid
+	 */
 	public Fire(int numCells) {
 		super(numCells);
 		myCellType1 = "Tree";
 		myCellType2 = "Fire";
 	}
 
+	/**
+	 * 
+	 * @param i row number of a cell
+	 * @param j column number of a cell
+	 * @return whether a cell has a burning cell as a neighbor
+	 */
 	public boolean hasBurningNeighbor (int i, int j) {
 		for (Cell c: getFourNeighbors(i,j)) {
 			if (c.isBurning()) {
@@ -42,6 +52,9 @@ public class Fire extends Simulation{
 	}
 
 	@Override
+	/**
+	 * how a fire evolves determined by the fire simulation rule
+	 */
 	public void evolve() {
 		List<List<Cell>> updatedCells = new ArrayList<>(myCells);
 		for (int i = 1; i < myCells.size()-1; i++) {
@@ -77,6 +90,9 @@ public class Fire extends Simulation{
 	}
 
 	@Override
+	/**
+	 * how a fire grid is created by its rule
+	 */
 	public void initialize() {
 		int numCells = myNumCells;
 
@@ -101,11 +117,18 @@ public class Fire extends Simulation{
 		setCount();
 	}
 
+	/**
+	 * 
+	 * @param prob input probability
+	 */
 	public void setProbCatch(double prob) {
 		this.probCatch = prob;
 	}
 
 	@Override
+	/**
+	 * read and set initial configuration from an XML file
+	 */
 	public void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException {
 		double cell_size = Main.GRID_SIZE/(double)myNumCells;
 		Document doc = XMLReader.read(file);
@@ -136,6 +159,9 @@ public class Fire extends Simulation{
 	}
 
 	@Override
+	/**
+	 * parameter slider for probCatch
+	 */
 	public Slider parameter1Slider(Text text) {
 		Slider prob = new Slider(0,1,probCatch);
 		prob.valueProperty().addListener((observable, oldvalue, newvalue) ->

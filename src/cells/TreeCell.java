@@ -4,6 +4,9 @@ import javafx.scene.paint.Color;
 
 public class TreeCell extends Cell {
 	
+	/**
+	 * Default constructor for the Tree cells used in Fire
+	 */
 	public TreeCell(double x_pos, double y_pos, double width, double height, int i, int j) {
 		super(x_pos, y_pos, width, height,i,j);
 		isTree = true;

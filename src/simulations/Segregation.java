@@ -33,6 +33,10 @@ public class Segregation extends Simulation {
 	
 	private ArrayList<Point> emptyPoints;
 
+	/**
+	 * Default constructor for Segregation Simulation
+	 * @param numCells number of cells on one side of a grid
+	 */
 	public Segregation(int numCells) {
 		super(numCells);
 		myCellType1 = "Red";
@@ -40,6 +44,9 @@ public class Segregation extends Simulation {
 	}
 	
 	@Override
+	/**
+	 * how a grid of segregation cells update based on segregation rules
+	 */
 	public void evolve() {
 		List<List<Cell>> updatedCells = new ArrayList<>(myCells);
 		for (int i = 1; i < myCells.size()-1;i++) {
@@ -75,6 +82,10 @@ public class Segregation extends Simulation {
 		myCells = updatedCells;
 	}
 	
+	/**
+	 * 
+	 * @param minSatisfaction input fraction that is the barrier of satisfaction
+	 */
 	public void setMyMinSatisfaction(double minSatisfaction) {
 		myMinSatisfaction = minSatisfaction;
 	}
@@ -117,6 +128,9 @@ public class Segregation extends Simulation {
 	}
 	
 	@Override
+	/**
+	 * how a segregation simulation initializes the grid based on percentage of each type of cells
+	 */
 	public void initialize() {
 		int numCells = myNumCells;
 		emptyPoints = new ArrayList<>();
@@ -148,15 +162,26 @@ public class Segregation extends Simulation {
 		setCount();
 	}
 	
+	/**
+	 * 
+	 * @param empty input percentage of empty cells
+	 */
 	public void setEmptyPercent(double empty) {
 		myEmptyPercent = empty;
 	}
 	
+	/**
+	 * 
+	 * @param ratio input ratio of red and blue cells
+	 */
 	public void setRatio(double ratio) {
 		myRedBlueRatio = ratio;
 	}
 	
 	@Override
+	/**
+	 * read and set initial configuration from an XML file
+	 */
 	public void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException {
 		double cell_size = Main.GRID_SIZE/(double)myNumCells;
 		Document doc = XMLReader.read(file);
@@ -187,6 +212,9 @@ public class Segregation extends Simulation {
 	}
 	
 	@Override
+	/**
+	 * dynamic changer of minSatisfaction
+	 */
 	public Slider parameter1Slider(Text text) {
 		Slider satisfaction = new Slider(0,1,myMinSatisfaction);
 		satisfaction.valueProperty().addListener((observable, oldvalue, newvalue) ->
@@ -199,6 +227,10 @@ public class Segregation extends Simulation {
 		return satisfaction;
 	}
 
+	/**
+	 * 
+	 * @return myMinSatisfaction
+	 */
 	public double getMyMinSatisfaction() {
 		return myMinSatisfaction;
 	}

@@ -28,12 +28,22 @@ public class GameOfLife extends Simulation {
 	private double myAliveDeadRatio = 2;
 	private double myAlivePercent = myAliveDeadRatio/(myAliveDeadRatio+1);
 	
+	/**
+	 * Default constructor for GameOfLife Simulation
+	 * @param numCells number of cells on one side of a grid
+	 */
 	public GameOfLife(int numCells) {
 		super(numCells);
 		myCellType1 = "Alive";
 		myCellType2 = "Dead";
 	}
 
+	/**
+	 * 
+	 * @param i row number of a cell
+	 * @param j column number of a cell
+	 * @return number of alive neighbors of that cell
+	 */
 	private int countAliveNeighbors(int i, int j) {
 		ArrayList<Cell> neighbors = getNeighbors(i,j);
 		int count = 0;
@@ -45,11 +55,18 @@ public class GameOfLife extends Simulation {
 		return count;
 	}
 	
+	/**
+	 * 
+	 * @param ratio input alive/dead ratio 
+	 */
 	public void setRatio(double ratio) {
 		myAliveDeadRatio = ratio;
 	}
 	
 	@Override
+	/**
+	 * update method for game of life based on Conway's Game of Life rules
+	 */
 	public void evolve() {
 		List<List<Cell>> updatedCells = new ArrayList<>(myCells);
 		for (int i = 1; i < myCells.size()-1;i++) {
@@ -85,6 +102,9 @@ public class GameOfLife extends Simulation {
 	}
 
 	@Override
+	/**
+	 * initialize the grid based on random percentage
+	 */
 	public void initialize() {
 		int numCells = myNumCells;
 		double cell_size = Main.GRID_SIZE/(double)numCells;
@@ -112,6 +132,9 @@ public class GameOfLife extends Simulation {
 	}
 
 	@Override
+	/**
+	 * read and set initial configuration from an XML file
+	 */
 	public void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException {
 		double cell_size = Main.GRID_SIZE/(double)myNumCells;
 		Document doc = XMLReader.read(file);
@@ -142,6 +165,9 @@ public class GameOfLife extends Simulation {
 	}
 
 	@Override
+	/**
+	 * no parameter could be changed for a GOL simulation
+	 */
 	public Slider parameter1Slider(Text text) {
 		return null;
 	}

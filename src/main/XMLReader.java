@@ -109,6 +109,10 @@ public class XMLReader {
 		}
 	}
 	
+	/**
+	 * @param file XML configuration file
+	 * @return the initial configuration mode indicated by the XML
+	 */
 	public static String readInitialConfigMode(File file) throws SAXException, IOException, ParserConfigurationException {
 		Document doc = read(file);
 		return doc.getElementsByTagName("initialConfig").item(0).getFirstChild().getNodeValue();
