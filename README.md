@@ -3,7 +3,7 @@
 CompSci 308 Cell Society Project
 by Siyuan Chen, Jamie Kim and Ryan Suggs
 
-* This project is started on Jan. 29th and finished on Feb. 12th. The estimate number of hours spent is about 50 hours.
+* This project is started on Jan. 29th and finished on Feb. 12th. The estimate number of hours spent is about 70 hours.
 * Roles of each author:
 	* Siyuan: 
 		* Sprint 2: implemented Simulation and Cell superclasses, implemented four basic simulations, implemented XML reader and UI
