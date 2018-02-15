@@ -79,7 +79,8 @@ public class Fire extends Simulation{
 		}
 		myCells = updatedCells;
 	}
-
+	
+	@Override
 	protected void setCount() {
 		for (List<Cell> col:myCells) {
 			for (Cell c: col) {
@@ -115,14 +116,6 @@ public class Fire extends Simulation{
 		}
 		myCells = cells;
 		setCount();
-	}
-
-	/**
-	 * 
-	 * @param prob input probability
-	 */
-	public void setProbCatch(double prob) {
-		this.probCatch = prob;
 	}
 
 	@Override
@@ -179,6 +172,13 @@ public class Fire extends Simulation{
 	 */
 	public double getProbCatch() {
 		return probCatch;
+	}
+	
+	/**
+	 * @param prob input probability
+	 */
+	public void setProbCatch(double prob) {
+		this.probCatch = prob;
 	}
 	
 }

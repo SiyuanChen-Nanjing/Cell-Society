@@ -35,14 +35,6 @@ public abstract class Simulation {
 	}
 	
 	/**
-	 * 
-	 * @return an unmodifiable list of cellular grid
-	 */
-	public List<List<Cell>> getMyCells() {
-		return Collections.unmodifiableList(myCells);
-	}
-	
-	/**
 	 * how a grid updates itself
 	 */
 	public abstract void evolve();
@@ -87,6 +79,42 @@ public abstract class Simulation {
 		neighbors.add(myCells.get(i+1).get(j));
 		return neighbors;
 	}
+
+	/**
+	 * dynamic changer of the size of the grid
+	 */
+	public Slider sizeBar(Text text) {
+		Slider size = new Slider(10,50,myNumCells);
+		size.valueProperty().addListener((observable, oldvalue, newvalue) ->
+        {
+            myNumCells = newvalue.intValue();
+            myCellCount1 = 0;
+            myCellCount2 = 0;
+            initialize();
+            text.setText("Size: " + myNumCells + "*" + myNumCells);
+        } );
+		size.setLayoutX(410);
+		size.setLayoutY(310);
+		return size;
+	}
+	
+	/**
+	 * read and set initial configuration from an XML file
+	 */
+	public abstract void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException;
+	
+	/**
+	 * dynamic changer of a parameter (specific to a simulation)
+	 */
+	public abstract Slider parameter1Slider(Text text);
+	
+	/**
+	 * 
+	 * @return an unmodifiable list of cellular grid
+	 */
+	public List<List<Cell>> getMyCells() {
+		return Collections.unmodifiableList(myCells);
+	}
 	
 	/**
 	 * @return the myNumCells
@@ -122,34 +150,5 @@ public abstract class Simulation {
 	public int getMyCellCount2() {
 		return myCellCount2;
 	}
-
-	/**
-	 * dynamic changer of the size of the grid
-	 */
-	public Slider sizeBar(Text text) {
-		Slider size = new Slider(10,50,myNumCells);
-		size.valueProperty().addListener((observable, oldvalue, newvalue) ->
-        {
-            myNumCells = newvalue.intValue();
-            myCellCount1 = 0;
-            myCellCount2 = 0;
-            initialize();
-            text.setText("Size: " + myNumCells + "*" + myNumCells);
-        } );
-		size.setLayoutX(410);
-		size.setLayoutY(310);
-		return size;
-	}
-	
-	/**
-	 * read and set initial configuration from an XML file
-	 */
-	public abstract void readConfiguration(File file, Stage stage) throws SAXException, IOException, ParserConfigurationException;
-	
-	/**
-	 * dynamic changer of a parameter (specific to a simulation)
-	 */
-	public abstract Slider parameter1Slider(Text text);
-	
 	
 }

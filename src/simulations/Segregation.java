@@ -83,7 +83,6 @@ public class Segregation extends Simulation {
 	}
 	
 	/**
-	 * 
 	 * @param minSatisfaction input fraction that is the barrier of satisfaction
 	 */
 	public void setMyMinSatisfaction(double minSatisfaction) {
